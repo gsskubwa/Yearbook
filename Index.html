@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSS Kubwa Class of 2026 - Digital Yearbook</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            800: '#0c4a6e',
+                            900: '#0a3654',
+                            gold: '#d97706',
+                            goldHover: '#b45309'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        hand: ['Caveat', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        #camera-video {
+            transform: scaleX(-1);
+        }
+        .passport-frame-guide {
+            box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.75);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
+
+    <!-- Header Navigation -->
+    <header class="bg-brand-900 text-white sticky top-0 z-40 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('gallery')">
+                <div class="w-10 h-10 rounded-full bg-brand-gold flex items-center justify-center font-bold text-slate-900 text-lg shadow-inner">
+                    GSSK
+                </div>
+                <div>
+                    <h1 class="font-serif font-bold text-lg sm:text-xl leading-tight text-amber-100">GSS KUBWA</h1>
+                    <p class="text-xs text-brand-100 tracking-wider font-medium">CLASS OF 2026 YEARBOOK</p>
+                </div>
+            </div>
+
+            <!-- Nav Controls -->
+            <nav class="flex items-center space-x-2 sm:space-x-4">
+                <button onclick="navigateTo('gallery')" id="nav-gallery" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-brand-800 text-white hover:bg-brand-700 transition">
+                    <i class="fa-solid font-bold fa-graduation-cap sm:mr-1.5"></i><span class="hidden sm:inline">Students</span>
+                </button>
+                <button onclick="navigateTo('student-login')" id="nav-student" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-brand-800 text-brand-100 transition">
+                    <i class="fa-solid fa-user-pen sm:mr-1.5"></i><span id="nav-student-label" class="hidden sm:inline">Student Portal</span>
+                </button>
+                <button onclick="navigateTo('admin-login')" id="nav-admin" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-amber-600 hover:bg-amber-500 text-white transition shadow-sm">
+                    <i class="fa-solid fa-shield-halved sm:mr-1.5"></i><span class="hidden sm:inline">Admin Portal</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Global Notice Banner -->
+    <div id="status-banner" class="bg-emerald-600 text-white text-xs sm:text-sm py-2 px-4 text-center font-medium shadow-inner flex items-center justify-center space-x-2">
+        <i class="fa-solid fa-shield-check text-amber-200"></i>
+        <span id="status-banner-text">Student Data Privacy Active: Exam Numbers Protected. Photos open for submissions.</span>
+    </div>
+
+    <!-- Main Content Area Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ================= GALLERY VIEW ================= -->
+        <section id="view-gallery" class="space-y-6">
+            <!-- Hero / Header -->
+            <div class="bg-gradient-to-r from-brand-900 via-brand-800 to-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+                <div class="absolute right-0 top-0 bottom-0 opacity-10 flex items-center pr-6 pointer-events-none">
+                    <i class="fa-solid fa-book-bookmark text-9xl"></i>
+                </div>
+                <div class="relative z-10 max-w-2xl">
+                    <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider">Official 2026 Graduating Class</span>
+                    <h2 class="text-2xl sm:text-4xl font-serif font-bold mt-2 text-white">Government Secondary School, Kubwa</h2>
+                    <p class="mt-2 text-slate-300 text-sm sm:text-base">Explore all 714 graduating candidates. Search by student name, sign digital autographs, and leave verified memory tributes.</p>
+                </div>
+            </div>
+
+            <!-- Search and Filter Bar -->
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 flex flex-col md:flex-row gap-4 justify-between items-center">
+                <div class="relative w-full md:w-96">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400"></i>
+                    <input type="text" id="search-input" oninput="filterStudents()" placeholder="Search student by name or candidate ID..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
+                    <!-- Gender filter -->
+                    <select id="gender-filter" onchange="filterStudents()" class="bg-slate-50 border border-slate-300 rounded-lg text-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        <option value="all">All Genders</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+
+                    <!-- Photo Filter -->
+                    <select id="photo-filter" onchange="filterStudents()" class="bg-slate-50 border border-slate-300 rounded-lg text-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        <option value="all">All Students</option>
+                        <option value="with-photo">With Passport Photo</option>
+                    </select>
+
+                    <div class="text-xs text-slate-500 font-medium bg-slate-100 px-3 py-2 rounded-lg border border-slate-200">
+                        Showing: <span id="student-count-badge" class="font-bold text-brand-700">0</span> / 714
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Cards Grid -->
+            <div id="students-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex items-center justify-between bg-white px-4 py-3 rounded-xl border border-slate-200">
+                <button id="prev-page-btn" onclick="changePage(-1)" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-chevron-left mr-1"></i> Previous
+                </button>
+                <span id="page-indicator" class="text-sm font-semibold text-slate-600">Page 1 of 1</span>
+                <button id="next-page-btn" onclick="changePage(1)" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Next <i class="fa-solid fa-chevron-right ml-1"></i>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- ================= STUDENT PROFILE & AUTOGRAPH MODAL ================= -->
+        <div id="profile-modal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+            <div class="bg-white rounded-2xl max-w-3xl w-full overflow-hidden shadow-2xl transform transition-all my-6 max-h-[92vh] flex flex-col">
+                <!-- Modal Header -->
+                <div class="bg-brand-900 text-white p-4 sm:p-6 flex items-start justify-between relative border-b border-brand-800">
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <img id="modal-student-img" src="" alt="" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-4 border-white shadow-md bg-slate-200">
+                            <span id="modal-candidate-badge" class="absolute -bottom-2 -right-2 bg-amber-500 text-slate-900 text-[11px] font-black px-2 py-0.5 rounded-full shadow border border-white"></span>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-brand-800 text-amber-300 border border-brand-700 text-[11px] font-bold px-2 py-0.5 rounded">GSS KUBWA CLASS OF 2026</span>
+                            </div>
+                            <h3 id="modal-student-name" class="text-xl sm:text-2xl font-serif font-bold text-white mt-1"></h3>
+                            <p id="modal-student-meta" class="text-brand-100 text-xs sm:text-sm mt-0.5"></p>
+                        </div>
+                    </div>
+                    <button onclick="closeModal()" class="text-slate-300 hover:text-white p-2 rounded-full hover:bg-brand-800 transition">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="p-6 overflow-y-auto custom-scrollbar flex-grow space-y-6">
+                    <!-- Motto / Quote -->
+                    <div class="bg-amber-50/80 border-l-4 border-amber-500 p-4 rounded-r-xl shadow-sm">
+                        <p class="text-[11px] uppercase font-bold text-amber-800 tracking-wider flex items-center">
+                            <i class="fa-solid fa-quote-left mr-1.5 text-amber-500"></i> Senior Yearbook Quote
+                        </p>
+                        <p id="modal-quote" class="text-slate-800 italic font-serif mt-1 text-sm sm:text-base leading-relaxed">"No quote added yet."</p>
+                    </div>
+
+                    <!-- Digital Autograph Board & Wall Notes -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                            <h4 class="font-bold text-slate-800 text-sm flex items-center">
+                                <i class="fa-solid fa-signature text-amber-600 mr-2 text-base"></i> Digital Autograph Wall & Doodles
+                            </h4>
+                            <span class="text-[11px] text-slate-500">Sign your classmate's yearbook page</span>
+                        </div>
+
+                        <!-- Canvas Drawing Board for Autograph -->
+                        <div class="relative bg-white rounded-lg border border-slate-300 p-2 text-center shadow-inner">
+                            <canvas id="autograph-canvas" width="550" height="120" class="w-full h-28 bg-amber-50/30 rounded cursor-crosshair border border-dashed border-amber-200 touch-none"></canvas>
+                            <p class="text-[10px] text-slate-400 mt-1 italic">Draw your signature or quick doodle with mouse/finger above</p>
+                            
+                            <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-100">
+                                <div class="flex space-x-1.5 items-center">
+                                    <span class="text-[10px] text-slate-500 font-bold mr-1">Ink:</span>
+                                    <button onclick="setInkColor('#0369a1')" class="w-5 h-5 rounded-full bg-sky-700 ring-2 ring-offset-1 ring-sky-700 hover:scale-110 transition"></button>
+                                    <button onclick="setInkColor('#d97706')" class="w-5 h-5 rounded-full bg-amber-600 hover:scale-110 transition"></button>
+                                    <button onclick="setInkColor('#059669')" class="w-5 h-5 rounded-full bg-emerald-600 hover:scale-110 transition"></button>
+                                    <button onclick="setInkColor('#0f172a')" class="w-5 h-5 rounded-full bg-slate-900 hover:scale-110 transition"></button>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button onclick="clearAutographCanvas()" class="px-2.5 py-1 text-xs text-slate-600 bg-slate-100 hover:bg-slate-200 rounded font-medium">Clear</button>
+                                    <button onclick="saveAutograph()" class="px-3 py-1 text-xs text-white bg-amber-600 hover:bg-amber-700 rounded font-bold shadow-sm">Post Autograph</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Autographs Display Stream -->
+                        <div id="autographs-display" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-2">
+                            <!-- Autographs injected here -->
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-200">
+
+                    <!-- Reviews & Tributes Section -->
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="font-bold text-slate-800 text-base flex items-center">
+                                <i class="fa-solid fa-comments text-brand-500 mr-2"></i> Memory Book & Tributes
+                            </h4>
+                            <span id="review-count-tag" class="text-xs bg-slate-100 font-semibold px-2.5 py-1 rounded-full text-slate-600">0 Reviews</span>
+                        </div>
+
+                        <!-- Add Review Form (Name First, Exam Code for Verification Only) -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                                <p class="text-xs font-bold text-slate-700 flex items-center">
+                                    <i class="fa-solid fa-user-check text-emerald-600 mr-1.5"></i> Leave a Memory Tribute
+                                </p>
+                                <span class="text-[10px] text-slate-400 bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200">Exam Code Protected</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-0.5">Your Full Name *</label>
+                                    <input type="text" id="reviewer-name" placeholder="e.g. Ibrahim Musa" class="w-full bg-white border border-slate-300 text-xs rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-0.5">Your Exam Code (Private Verification) *</label>
+                                    <input type="password" id="reviewer-exam" placeholder="Enter 10-digit exam code" class="w-full bg-white border border-slate-300 text-xs rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                    <span class="text-[9px] text-slate-400 block mt-0.5">Used strictly to verify you are a candidate. Never published.</span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-1 gap-3">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-0.5">Relationship / Nickname</label>
+                                    <input type="text" id="reviewer-rel" placeholder="e.g. Class Captain / Desk Partner / Friend" class="w-full bg-white border border-slate-300 text-xs rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between items-center mb-0.5">
+                                    <label class="block text-[10px] font-bold text-slate-500 uppercase">Memory / Tribute Text *</label>
+                                    <span id="char-count" class="text-[10px] text-slate-400">0 / 250</span>
+                                </div>
+                                <textarea id="review-text" maxlength="250" oninput="updateCharCount()" rows="2.5" placeholder="Write something inspiring, memorable, or funny about this classmate..." class="w-full bg-white border border-slate-300 text-xs rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
+                            </div>
+
+                            <button onclick="submitReview()" class="w-full bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold py-2.5 rounded-lg transition shadow flex items-center justify-center space-x-1.5">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span>Post Verified Tribute</span>
+                            </button>
+                        </div>
+
+                        <!-- Reviews List -->
+                        <div id="modal-reviews-list" class="mt-4 space-y-3">
+                            <!-- Reviews injected -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================= STUDENT LOGIN & EDIT PORTAL ================= -->
+        <section id="view-student-login" class="hidden max-w-xl mx-auto py-8">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                <div class="bg-brand-900 text-white p-6 text-center">
+                    <div class="w-12 h-12 bg-amber-500 text-slate-900 rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-2">
+                        <i class="fa-solid fa-user-lock"></i>
+                    </div>
+                    <h2 class="text-xl font-serif font-bold">Student Self-Service Portal</h2>
+                    <p class="text-xs text-brand-100 mt-1">Authentic verification to update your profile quote & photo</p>
+                </div>
+
+                <div class="p-6 space-y-4">
+                    <div id="student-login-error" class="hidden bg-rose-50 border border-rose-200 text-rose-700 text-xs p-3 rounded-lg"></div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Full Name</label>
+                        <input type="text" id="student-login-name-input" placeholder="e.g. Abass Khalid Ololade" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">10-Digit Examination Code</label>
+                        <input type="password" id="student-exam-input" placeholder="Enter your official 10-digit code" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        <p class="text-[11px] text-slate-500 mt-1">Your exam number is kept strictly confidential and not shown publicly.</p>
+                    </div>
+
+                    <button onclick="loginStudent()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl transition text-sm shadow-md">
+                        Access My Profile <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- STUDENT EDIT DASHBOARD (Logged In) -->
+        <section id="view-student-editor" class="hidden max-w-2xl mx-auto py-6">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                <div class="bg-brand-800 text-white p-6 flex justify-between items-center">
+                    <div>
+                        <span class="text-xs bg-amber-500 text-slate-900 font-bold px-2 py-0.5 rounded">VERIFIED CANDIDATE</span>
+                        <h2 id="edit-student-name" class="text-xl font-serif font-bold mt-1"></h2>
+                        <p id="edit-student-code" class="text-xs text-brand-100"></p>
+                    </div>
+                    <button onclick="logoutStudent()" class="text-xs bg-brand-900 hover:bg-brand-950 text-white px-3 py-2 rounded-lg font-semibold">
+                        Logout
+                    </button>
+                </div>
+
+                <div class="p-6 space-y-6">
+                    <!-- Photo status check -->
+                    <div id="photo-lock-notice" class="hidden bg-amber-50 border border-amber-200 p-4 rounded-xl flex items-center space-x-3 text-amber-800 text-xs">
+                        <i class="fa-solid fa-lock text-xl text-amber-600"></i>
+                        <span><strong>Submissions Closed!</strong> The administrator has locked profile edits. You cannot update your photo at this time.</span>
+                    </div>
+
+                    <!-- Photo Upload Section -->
+                    <div id="student-photo-form-group" class="space-y-3">
+                        <label class="block text-xs font-bold text-slate-700 uppercase">Profile Picture / Passport</label>
+                        <div class="flex items-center space-x-4">
+                            <img id="edit-photo-preview" src="" alt="Preview" class="w-24 h-24 rounded-2xl object-cover bg-slate-100 border-2 border-slate-300">
+                            <div class="flex-grow space-y-2">
+                                <input type="file" id="edit-photo-input" accept="image/*" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
+                                <p class="text-[11px] text-slate-500">Upload a clear passport photograph or portrait.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quote/Motto -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Graduation Quote / Memory Motto</label>
+                        <textarea id="edit-quote-input" rows="3" placeholder="Write something inspiring or funny to remember you by..." class="w-full border border-slate-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
+                    </div>
+
+                    <button id="save-student-btn" onclick="saveStudentProfile()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition text-sm shadow-md">
+                        <i class="fa-solid fa-floppy-disk mr-2"></i> Save Profile Details
+                    </button>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= ADMIN LOGIN & CONTROL DASHBOARD ================= -->
+        <section id="view-admin-login" class="hidden max-w-md mx-auto py-10">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                <div class="bg-amber-600 text-white p-6 text-center">
+                    <i class="fa-solid fa-user-shield text-3xl mb-2"></i>
+                    <h2 class="text-xl font-serif font-bold">Admin Portal Login</h2>
+                    <p class="text-xs text-amber-100 mt-1">WAEC Booklet Digitization & Photo Studio</p>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div id="admin-login-error" class="hidden bg-rose-50 border border-rose-200 text-rose-700 text-xs p-3 rounded-lg"></div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Admin Passcode</label>
+                        <input type="password" id="admin-passcode-input" placeholder="Enter admin code" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                        <p class="text-[11px] text-slate-400 mt-1">Default passcode is <code class="bg-slate-100 font-mono px-1 py-0.5 rounded text-amber-700">admin2026</code></p>
+                    </div>
+                    <button onclick="loginAdmin()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 rounded-xl transition text-sm shadow-md">
+                        Login as Admin <i class="fa-solid fa-right-to-bracket ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADMIN DASHBOARD & BOOKLET PASSPORT CLEANER -->
+        <section id="view-admin-dashboard" class="hidden space-y-6">
+            <!-- Header bar -->
+            <div class="bg-slate-900 text-white rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-lg">
+                <div>
+                    <span class="bg-amber-500 text-slate-900 text-xs font-extrabold px-2.5 py-0.5 rounded">ADMIN CONTROL PANEL</span>
+                    <h2 class="text-2xl font-serif font-bold mt-1">WAEC Booklet Photo Restorer & Studio</h2>
+                    <p class="text-slate-400 text-xs">Digitize paper passport photos from WAEC booklets with auto-paper cleanup, glare removal, and alignment.</p>
+                </div>
+                <button onclick="logoutAdmin()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold px-4 py-2.5 rounded-lg border border-slate-700">
+                    Exit Admin
+                </button>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-brand-50 text-brand-600 rounded-xl flex items-center justify-center font-bold text-xl">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase">Total Candidates</p>
+                        <p class="text-2xl font-black text-slate-800">714</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center font-bold text-xl">
+                        <i class="fa-solid fa-image"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase">Photos Uploaded</p>
+                        <p id="admin-photos-count" class="text-2xl font-black text-slate-800">0</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center font-bold text-xl">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase">Privacy Masking</p>
+                        <p class="text-sm font-bold text-emerald-600">Exam Codes Hidden</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lock Toggle Box -->
+            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div>
+                    <h3 class="font-bold text-slate-800 text-base">Student Photo Submission Lock</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">When locked, students can no longer upload or replace photos from their portal.</p>
+                </div>
+                <button id="toggle-lock-btn" onclick="toggleSubmissionLock()" class="px-5 py-2.5 rounded-xl font-bold text-xs shadow-md transition flex items-center space-x-2">
+                    <!-- Button populated in JS -->
+                </button>
+            </div>
+
+            <!-- Direct Student Photo & Booklet Passport Scanner Studio -->
+            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h3 class="font-bold text-slate-800 text-base flex items-center">
+                        <i class="fa-solid fa-wand-magic-sparkles text-amber-600 mr-2"></i> WAEC Passport Booklet Restorer Studio
+                    </h3>
+                    <span class="text-xs text-amber-700 bg-amber-50 font-bold px-2.5 py-1 rounded-full border border-amber-200">
+                        <i class="fa-solid fa-sparkles mr-1"></i> Booklet Paper Cleanup Active
+                    </span>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Select Student to Photograph / Edit</label>
+                    <select id="admin-student-select" onchange="onAdminSelectStudent()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        <!-- Populated with all 714 students -->
+                    </select>
+                </div>
+
+                <!-- Studio Box Layout -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    <!-- Left Column: Live Camera & Preview Viewfinder (5 cols) -->
+                    <div class="lg:col-span-5 bg-slate-900 rounded-2xl p-4 text-white space-y-3 text-center shadow-inner">
+                        <div class="relative w-full aspect-square max-w-[320px] mx-auto bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 flex items-center justify-center">
+                            
+                            <!-- Video feed -->
+                            <video id="camera-video" autoplay playsinline class="hidden w-full h-full object-cover"></video>
+                            
+                            <!-- Snapshot / Preview image canvas display -->
+                            <img id="admin-preview-img" src="" alt="Student Preview" class="w-full h-full object-cover">
+                            
+                            <!-- Framing guide overlay for snapping passport photos in booklets -->
+                            <div id="framing-guide" class="hidden absolute inset-0 pointer-events-none flex flex-col items-center justify-center">
+                                <div class="w-48 h-56 border-2 border-amber-400 border-dashed rounded-lg shadow-2xl relative">
+                                    <span class="absolute -top-6 left-0 right-0 text-[10px] bg-amber-500 text-slate-900 font-bold py-0.5 rounded shadow">Align Stapled Passport Here</span>
+                                </div>
+                            </div>
+
+                            <div id="camera-placeholder" class="text-slate-500 space-y-1">
+                                <i class="fa-solid fa-camera text-3xl"></i>
+                                <p class="text-xs">Camera Offline</p>
+                            </div>
+                        </div>
+
+                        <!-- Camera Action Buttons -->
+                        <div class="flex flex-wrap items-center justify-center gap-2 pt-2">
+                            <button id="start-cam-btn" onclick="startLiveCamera()" class="bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center">
+                                <i class="fa-solid fa-video mr-1.5"></i> Snap Booklet Passport
+                            </button>
+                            <button id="snap-cam-btn" onclick="captureCameraSnapshot()" class="hidden bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center">
+                                <i class="fa-solid fa-circle-dot mr-1.5"></i> Capture Photo
+                            </button>
+                            <button id="stop-cam-btn" onclick="stopLiveCamera()" class="hidden bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold px-3 py-2 rounded-lg transition">
+                                Stop Camera
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Image Cleaner & Restoration Controls (7 cols) -->
+                    <div class="lg:col-span-7 bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-5">
+                        <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                            <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">
+                                <i class="fa-solid fa-sliders text-brand-600 mr-1.5"></i> Paper Passport Restoration Filters
+                            </h4>
+                            <button onclick="applyAutoPaperCleanPreset()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 text-[11px] font-bold px-2.5 py-1 rounded shadow-sm transition">
+                                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Auto-Clean Booklet Photo
+                            </button>
+                        </div>
+
+                        <!-- Preset Filters Bar -->
+                        <div class="space-y-1.5">
+                            <label class="block text-[11px] font-bold text-slate-600 uppercase">Quick Restoration Presets:</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                <button onclick="setFilterPreset('paper-clean')" class="px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-medium hover:border-amber-500 text-slate-700 hover:text-amber-700 text-center">
+                                    📜 Booklet Clean
+                                </button>
+                                <button onclick="setFilterPreset('passport-hd')" class="px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-medium hover:border-amber-500 text-slate-700 hover:text-amber-700 text-center">
+                                    ✨ Passport HD
+                                </button>
+                                <button onclick="setFilterPreset('vintage')" class="px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-medium hover:border-amber-500 text-slate-700 hover:text-amber-700 text-center">
+                                    🎞️ Crisp B&W
+                                </button>
+                                <button onclick="setFilterPreset('original')" class="px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-medium hover:border-slate-400 text-slate-500 text-center">
+                                    🔄 Reset Original
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Manual Enhancement Sliders -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <div class="flex justify-between text-[11px] font-bold text-slate-600 mb-1">
+                                    <span>Contrast (Removes Fog/Paper Noise)</span>
+                                    <span id="val-contrast">120%</span>
+                                </div>
+                                <input type="range" id="slider-contrast" min="80" max="220" value="120" oninput="applyImageFilters()" class="w-full accent-amber-600">
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-[11px] font-bold text-slate-600 mb-1">
+                                    <span>Brightness (Fixes Shadows)</span>
+                                    <span id="val-brightness">105%</span>
+                                </div>
+                                <input type="range" id="slider-brightness" min="70" max="150" value="105" oninput="applyImageFilters()" class="w-full accent-amber-600">
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-[11px] font-bold text-slate-600 mb-1">
+                                    <span>Saturation (Vibrance)</span>
+                                    <span id="val-saturate">110%</span>
+                                </div>
+                                <input type="range" id="slider-saturate" min="0" max="200" value="110" oninput="applyImageFilters()" class="w-full accent-amber-600">
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-[11px] font-bold text-slate-600 mb-1">
+                                    <span>Warmth / White Balance</span>
+                                    <span id="val-warmth">0°</span>
+                                </div>
+                                <input type="range" id="slider-warmth" min="-50" max="50" value="0" oninput="applyImageFilters()" class="w-full accent-amber-600">
+                            </div>
+                        </div>
+
+                        <!-- Rotation & Alternative Upload -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-200">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Rotate / Orientation</label>
+                                <button onclick="rotateImage()" class="px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-100 flex items-center space-x-1.5">
+                                    <i class="fa-solid fa-rotate-right text-amber-600"></i>
+                                    <span>Rotate 90° Clockwise</span>
+                                </button>
+                            </div>
+
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Option B: Upload Digital File</label>
+                                <input type="file" id="admin-photo-input" accept="image/*" onchange="previewFileImage(this)" class="block w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Senior Quote / Motto</label>
+                            <textarea id="admin-quote-input" rows="2" placeholder="Enter student motto..." class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
+                        </div>
+
+                        <button onclick="saveAdminStudentEdit()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-xs transition shadow flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-check"></i>
+                            <span>Save Restored Photo & Profile to Selected Candidate</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-6 mt-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p class="font-medium text-slate-300">Government Secondary School, Kubwa &copy; 2026 WASSCE Candidates Digital Yearbook</p>
+            <p class="text-slate-500">Privacy Compliant System • Exam Numbers Confidential • Digital Booklet Preservation</p>
+        </div>
+    </footer>
+
+    <!-- Hidden Canvases for Processing & Snapshotting -->
+    <canvas id="snapshot-canvas" class="hidden" width="500" height="500"></canvas>
+    <canvas id="filter-processing-canvas" class="hidden" width="500" height="500"></canvas>
+
+    <!-- EMBEDDED COMPLETE DATASET & APPLICATION SCRIPT -->
+    <script>
+        // Full candidates data extracted from official validation document
+        const RAW_STUDENT_DATA = [
+            [1, "4020204001", "Abass Khalid Ololade", "Male", "2010-Mar-20"],
+            [2, "4020204002", "Abayomi Kehinde Glory", "Female", "2009-Mar-30"],
+            [3, "4020204003", "Abayomi Taye Precious", "Female", "2009-Mar-30"],
+            [4, "4020204004", "Abdulazeez Abdulateef", "Male", "2010-May-31"],
+            [5, "4020204005", "Abdulazeez Jemila Omayoza", "Female", "2010-Feb-25"],
+            [6, "4020204006", "Abdulazeez Umeima Oyiza", "Female", "2010-May-19"],
+            [7, "4020204007", "Abdulganiyu Aeesha Oyereyi", "Female", "2009-Jul-27"],
+            [8, "4020204008", "Abdulhakeem Abdulbaqee Olayinka", "Male", "2010-Apr-11"],
+            [9, "4020204009", "Abdulhakeem Mustapha Adetunji", "Male", "2010-Jun-11"],
+            [10, "4020204010", "Abduljaleel Mujeebah Olabisi", "Female", "2010-Apr-27"],
+            [11, "4020204011", "Abdulkarim Shafa'atu", "Female", "2009-Apr-25"],
+            [12, "4020204012", "Abdullahi Aisha", "Female", "2009-Oct-10"],
+            [13, "4020204013", "Abdullahi Ibrahim", "Male", "2010-Jul-15"],
+            [14, "4020204014", "Abdullahi Labib", "Male", "2004-Jul-17"],
+            [15, "4020204015", "Abdullahi Mariyam", "Female", "2011-Jul-18"],
+            [16, "4020204016", "Abdullahi Muhammad Abubakar", "Male", "2009-Oct-05"],
+            [17, "4020204017", "Abdullahi Muhammad Kabir", "Male", "2010-Jul-25"],
+            [18, "4020204018", "Abdullahi Nafisa", "Female", "2010-Aug-15"],
+            [19, "4020204019", "Abdulmajeed-Ibrahim Raheema", "Female", "2009-Oct-06"],
+            [20, "4020204020", "Abdulrahman Ashraf Ahmed", "Male", "2010-Apr-12"],
+            [21, "4020204021", "Abdulrahman Tha'abit Onimisi", "Male", "2010-Jun-29"],
+            [22, "4020204022", "Abdulrasaq Hamidat", "Female", "2009-Sep-12"],
+            [23, "4020204023", "Abdulra'uf Muhizah", "Female", "2009-Jun-23"],
+            [24, "4020204024", "Abdulssalam Buhari Muhammad Bukhary", "Male", "2010-Mar-30"],
+            [25, "4020204025", "Abdulwakeel Mahfuz Olamilekan", "Male", "2010-Jan-05"],
+            [26, "4020204026", "Abdulwasiu Rabiah", "Female", "2010-Aug-01"],
+            [27, "4020204027", "Abel Iruoghene Unique", "Female", "2011-Jul-11"],
+            [28, "4020204028", "Abidemi Ainaodunayo Christabel", "Female", "2010-Nov-18"],
+            [29, "4020204029", "Abiodun Oladimeji Joshua", "Male", "2011-Mar-26"],
+            [30, "4020204030", "Abonyi Esther Onyinyechi", "Female", "2010-Apr-12"],
+            [31, "4020204031", "Abraham Favour Ugbede", "Male", "2010-Oct-04"],
+            [32, "4020204032", "Abraham Princess Alice", "Female", "2009-Mar-12"],
+            [33, "4020204033", "Abu Olamiposi Joseph", "Male", "2009-Mar-07"],
+            [34, "4020204034", "Abubakar Jibril Danjuma", "Male", "2010-Apr-22"],
+            [35, "4020204035", "Abutu Marvellous", "Female", "2009-Aug-19"],
+            [36, "4020204036", "Adam Khadijah Idris", "Female", "2009-Apr-24"],
+            [37, "4020204037", "Adams Favour", "Female", "2010-Jul-21"],
+            [38, "4020204038", "Adebanjo Daniel Anuoluwapo", "Male", "2010-Sep-04"],
+            [39, "4020204039", "Adebayo Dominion Ayomiposi", "Female", "2011-May-26"],
+            [40, "4020204040", "Adebayo Rejoice Oluwanifemi", "Female", "2011-Mar-13"]
+        ];
+
+        // Additional names list
+        const FULL_NAMES_LIST = [
+            "Abass Khalid Ololade","Abayomi Kehinde Glory","Abayomi Taye Precious","Abdulazeez Abdulateef","Abdulazeez Jemila Omayoza","Abdulazeez Umeima Oyiza","Abdulganiyu Aeesha Oyereyi","Abdulhakeem Abdulbaqee Olayinka","Abdulhakeem Mustapha Adetunji","Abduljaleel Mujeebah Olabisi",
+            "Abdulkarim Shafa'atu","Abdullahi Aisha","Abdullahi Ibrahim","Abdullahi Labib","Abdullahi Mariyam","Abdullahi Muhammad Abubakar","Abdullahi Muhammad Kabir","Abdullahi Nafisa","Abdulmajeed-Ibrahim Raheema","Abdulrahman Ashraf Ahmed",
+            "Abdulrahman Tha'abit Onimisi","Abdulrasaq Hamidat","Abdulra'uf Muhizah","Abdulssalam Buhari Muhammad Bukhary","Abdulwakeel Mahfuz Olamilekan","Abdulwasiu Rabiah","Abel Iruoghene Unique","Abidemi Ainaodunayo Christabel","Abiodun Oladimeji Joshua","Abonyi Esther Onyinyechi",
+            "Abraham Favour Ugbede","Abraham Princess Alice","Abu Olamiposi Joseph","Abubakar Jibril Danjuma","Abutu Marvellous","Adam Khadijah Idris","Adams Favour","Adebanjo Daniel Anuoluwapo","Adebayo Dominion Ayomiposi","Adebayo Rejoice Oluwanifemi",
+            "Adeboyejo Stephen Inioluwa","Adefemi Olamide Stephen","Adegahi Favour","Adelodun Bashirat","Adenekan Abdulbasit Oluwaferanmi","Adewale Olamide Elizabeth","Adeyemi Timileyin Hammed","Adeyemi Victoria","Adeyemo Adedire Adebola","Adizua Edna Chisom",
+            "Afolabi Bukunmi Ebenezer","Afolayan Moses Seun","Agbim Chigozie Theresa","Agbo Blessing Chisom","Agbo Chinekwu Mabel","Agbo Emmanuella Ekondu","Agbor Peace Beatrice","Agum Isaac Tersen","Aguzuo Glory Chiamaka","Ahize Favour Chidubem",
+            "Ahmad Fatima Danfulani","Ahmad Hanifa","Ahmed Hauwa Gumel","Ahmed Khadijah Emike","Ahmed Zainab Gumel","Ahukanna Favour Chinasa","Aina Teniola Eunice","Aitanun Angel Omono","Aitanun Mercy Onyekachi","Aiyedogbon Oluwasemilore Onaopemiposi",
+            "Ajagor Royal Kosisochukwu","Ajah Chimere Marvellous","Ajalogun Azeezat Omotola","Ajibola Favour Goodness","Akala Wisdom Kamsiyochukwu","Akamitang David Unimk","Akan Miracle Emem","Akanama Ama","Akande Deborah Omolola","Akaneme Emmanuel Chukwunwike",
+            "Akarahu Winner Chimeremueze","Akinbobola Oluwatobiloba Isioma","Akindonyin Ayomide Victor","Akinfenwa Dolapo Janet","Akinola Ayomikun Eunice","Akintomide Bright Okikijesu","Akinyemi Rejoice Gold","Akinyosoye Ifedayo Samuel","Akowe Jesse","Akpan Abigail Onyinyechi",
+            "Akula Nater King","Akumba Angel Chinenye","Alaaye Isreal","Alabi Abdurroheem Ayodele","Alabi David Onimisi","Alabi Rebecca Ajibola","Alade Toib","Alao Mukhtar Adeniyi","Alaribe Adaeze Precious","Albert Anna Ojonele",
+            "Albert Ethan Edu","Alexander Uzoma","Ali Sheriffdeen","Aliyu Abdulrahman Doga","Aliyu Yasmin Muhammad","Amadu Peculiar","Aminu Fatima","Aminu Firdausi Oyiza","Aminu Hauwau","Aminu Joy Ojochegbe",
+            "Aminu Masuda","Amodu Mercy Ejimomi","Amos Anabel Pemosi","Anaele Onyedikachi Goodness","Anene Alexander Chukwuebuka","Ani Henry Eni","Anibe Grace Ibe","Anietie-Dan Lydia Mfoniso","Anoribe Precious Ugochi","Anthony Favour Chukwu",
+            "Anyaora Victory Chiemerie","Anyigor Cynthia Ifunanya","Anyonya Divine Efemena","Arastus Pwashikai","Aregbesola Kifayatullah Gbemisola","Arome Ojochide Deborah","Asadu Ezinne Faith","Asamu Al-Ameen Abolaji","Asekomhe Charity Avuedoya","Asogwa Favour Nnodebe",
+            "Attah Jesse Ugbede","Audu Christiana Ojoagefu","Augustine Clementina Omojo","Augustine Treasure Nmesomachukwu","Awoniyi Precious Eniola","Ayaun Msaan Joy","Ayinde Abdulsamad","Ayinmode Blessing Funmilayo","Ayodele Oluwafisayo Joseph","Ayodele Oluwaseun Victoria",
+            "Ayoola Oyindamola Precious","Baba Angela","Babatunde Omofolahan Emmanuel","Babawale Mary Adebukola","Bakenna Ayuba Olamilekan","Bako Happiness Arwashi","Bamisile Blessing Temitope","Bariakpoa Ernest Legbosi","Bari-Nyana Andre Kwesi",
+            "Bashir Abdulsobur","Bashir Asiya Shagari","Basil Favour Ngozi","Bello Mustapha Tata","Bello Nafisat Ayinke","Bello Thara Ize","Bello Zafira Ozozahuwa","Benjamin Osemudiamhen","Benneth Tochukwu David","Ben-Ukanwoke Onyinyechi Chimdindu",
+            "Berebon David Chiemere","Biko Mary","Bishop Rejoice Adaobi","Bishop Rihanna Kamsi","Bitrus Amirgumninah Angela","Bitrus Treasure Kyangchat","Bolaji Boluwatife Daniel","Cassidy Destiny Himnom","Chiaka Glorious Ozioma","Chibiko Testimony Oluoma",
+            "Chibuogwu Racheal Nmesoma","Chibuzo Marvelous Chimeremeze","Chibuzor Great Chidiebube","Chibuzor Miracle Chidiebere","Chidi Majesty Chinaecherim","Chidi Rejoice Chinememma","Chidiadi Collins Chinonso","Chikaodiri Chinenye Peace","Chima Amanda Nwadinma","Chime Goodluck David",
+            "Chinabu Chinemerem Clinton","Chinanuife Ruth Chioma","Chinedu Chinedu Christian","Chinedu Chisom Chinagorom","Chinedu Destiny Akachukwu","Chinedu Marvelous Chinaza","Chinonso Chidera Benedicta","Chirah Chioma Precious","Chollom Ruth Dalyop","Chukwu Emmanuel Chidindu",
+            "Chukwu Emmanuella Chinwendu","Chukwu Victoria Daberechi","Chukwuani Dominic Chinomso","Chukwubueze Chukwuemeka Innocent","Chukwudi David Ekpereka","Chukwuemeka Gift Uchenna","Chukwuemeke Samuel","Chukwuezi Daniel Ebuka","Chukwuikpe Chinecherem Emmanuella","Chukwuneke Divine Ogechukwu",
+            "Chukwuneme Precious Amarachi","Clement Chiziterem Glory","Clement Goodness Tosin","Dagunduru Faith Ayomide","Damian Faith Chinaza","Daniel Catherine Ochuole","Daniel Grant","Daniel Miracle Otse","Daniel Peace Tishino","Daniel Salome",
+            "Danladi Endurance Musa","David Meshack Ayemele","Dawang Lovelyn Diedoem","Dennis Blessed Aniefiok","Dibuah Isaac Sochukwuezue","Duru Chinaza Emmanuella","Duru-Mbachu Pamela Ugochi","Ebirim Amarachukwu Daniella","Ebirim Onyinyeoma Emmanuella","Edegbo Happiness Olubojo",
+            "Edibo Famous Ojotule","Edward Okibeh","Efada Joseph Oineh","Effiong Deborah Alfred","Eguma Christopher Iyi-Owo","Ehiguese Junior Ebhose","Ehinmidu Damilola","Ehizojie Elizabeth Ono","Ejeh Perpetual Peace","Ejiogu Luke Munachimso",
+            "Ekeh Amarachi Stephanie","Ekeh Mallachy Chibuike","Ekesiani Gift Chinecherem","Ekeson Prince Akachukwu","Ekwok Blessing","Ekwugwum Ogochukwu Mercy","Elebachi-Uboh Michelle Uchechukwu","Eleke Deborah Oluebube","Elijah Niya","Elisha David Emeka",
+            "Emeka Christabel Chioma","Emeka Promise Ejiofor","Emele Esther Onyinyechi","Emelife Emmanuella Chidinma","Emem Ekemini","Emenike Rejioce Ozioma","Emmanuel Caleb Ikechukwu","Emmanuel Daniel Chimaobim","Emmanuel David Chijindu","Emmanuel Mercy Eseroghene",
+            "Emmanuel Monica Ogbene","Enawore David","Ende-Nathaniel Joan Tessa","Enikanoselu Daniel Bola","Enokela Godwin Ukwenya","Enwelu Nmachukwu Divine","Erameh Jennifer","Erhuvwu Fejiro David","Erondu Destiny Chinaza","Esumobi Grace Ifelunwa",
+            "Etoamaihe Mmesoma Marvelous","Etuk Mfoniso Miriam","Eze Favour Chisom","Eze Greatness Ihuoma","Eze Nmesoma Divine","Eze Peace","Eze Ujunwa Esther","Ezeagu Miracle Chinazaekpere","Ezekiel Ekemini Monday","Ezekiel Noble",
+            "Ezema Favour Ebube","Ezemma Harrison Chinecherem","Ezenwadi Chimaijem Cosmas","Ezeorizu Amarachukwu Vivian","Ezere Emmanuella Chinyereuba","Ezigbo Chisom Jennifer","Ezugwu Micheal Okechikwukere","Fagebo Esther Ifeoluwa","Fashe Abdulbasit","Femi David Ekhoia",
+            "Festus Dominion","Fidelis Clementina Annamay","Fidelis Esther Sopuruchukwu","Frank Iruoghene","Frank Kamsiyochukwu Esther","Funso Olamide Mercy","Gabriel Ifeoluwaposimi Moses","Gabriel Nanret Enoch","Gabriel Ojochogwu Joab","George Anthonia Emike",
+            "Godson Light Chidiebere","Godson Precious Oluwadamilola","Godspower Monica Rejoice","Godwin Avadoo Grace","Gold Damilola Prevailer","Gontur Hope Sarah","Habila Alheri Grace","Hamza Maryam Lawal","Haruna Alhassan","Haruna Glory",
+            "Haruna Nusaibat","Hassan Mary","Hassan Muhsinah Adeola","Hassan Yusuf Al-Amin","Hussain Asma'u Shazin","Hussaini Abdullahi Abdullahi","Ibe Chioma Favour","Ibeawuchi Daniella Chimuanya","Ibeawuchi Precious Chidinma","Ibrahim Aisha Bukar",
+            "Ibrahim Favour Rahanat","Ibrahim Hashim Bena","Ibrahim Kamaldeen Oluwaseun","Ibrahim Khalid","Ibrahim Muhammad Maahi","Ibrahim Nabiha Ene","Ibrahim Olamilekan Abdulganiu","Idoko Derrick Somtochukwu","Idris Ibrahim Noma","Idris Zainab Ize",
+            "Idris-Ismail Muadh Oladipupo","Ifeanyi Emmanuel Oghenefegiro","Ifeanyi Kosisochukwu","Ifeanyichukwu Daniel Kamsiyonna","Ifebuuche Emmanuel Dominion","Igbo Fidelis Uzochi","Igbokwe Ikechukwu Emmanuel","Ige Diekololaoluwa Dominion","Igiri Abigail","Igomu Elizabeth Egahjonyah",
+            "Igube Daberechi Rita","Igwe Bright Uchechi","Igwe Rejoice Ukamaka","Iheakanwa Jesse Osinachi","Ihezue Chidera Michelle Antoinette","Ikechi Chihurumnaya Wisdom","Ikechukwu Divine Anne","Ikenna Favour Adaeze","Ikpeni Emuobosa Gift","Ikwue Oche David",
+            "Iloh Michael Chukwunonso","Ilorah Chigozie Michael","Imafidon Prosper Pius","Innocent Blessing Udo","Ipigbhe Miracle Chinenye","Isa Isa Abdulwasiu","Isah Hauwa Jessica","Isah Khamarudeen Omeiza","Isah Lydia Omojo","Isah Maryam Kusherki",
+            "Isah Nazif","Isah Ummusalma Kusherki","Ishaq Fatima","Ishola Hafeezoh Omolola","Isiaka Mariam Ayomide","Isibor Jeremiah Esiomolomoh","Ismail Hannatu Omolola","Ismail Solihat Aderemi","Ismaila Aliyu","Israel Chiemerie Joan",
+            "Isreal Miracle Nyong","Iwomi Somtose Benedict","Iwu Eucharia Onyekachi","Iyama Bright Chimagbawe","Iyen Flourish Eloghosa","Iyke Kenneth Chukwuka","Izonfade Luckyere Mabel","Jacob Amos Olayinka","James Blessing Miracle","James Miracle Ogirima",
+            "Jayeola Jomiloju Abigail","Jerome David Ojone","Jimoh Odunayo Ayomide","John Chidinma Mary","John Chinyere Helen","John Comfort Apeh","John David","John Goodnews Oyiza","John Perfect Orifan","Joseph Deborah Ugochukwu",
+            "Joshua Favour Erovre","Josiah Zipporah Salasi","Kabir Abdullahi Azzam","Kadiri Deborah Moyinoluwa","Kalu Chidinma","Kayode Ayomide Henry","Kelechi Joseph Wisdom","Kelechukwu Nancy Chiamaka","Kenneth Ifeoluwa Daniel","Kenneth Queen Onyinyechukwu",
+            "Kenneth Victory Chibuike","Kolawole Success Temiloluwa","Kyana Basil Ahamed","Laoke Folasade Christiana","Lawal Hauwa'u Amama","Lawal Raihan Yakubu","Lawal Sofia Ifeoluwa","Lawrence Destiny Ogebe","Lawrence Vivian Ojochenemi","Liberty Khadijah",
+            "Linus Cherish Ezinwa","Lucky Favour","Lucky Gift Chidimma","Lukman Opeyemi Nominat","Macanthony Sonma Sheila","Madagwa Oghene Kparobor Famous","Madumere Angel Chiamaka","Mahmud Raheemah Jafaru","Malachi Victor Solumtochukwu","Malachy John Oluebube",
+            "Malacky King Nsikabasi","Mathew Chigozie Favour","Mathias Josiah Joseph","Matthew Anna","Matthew Gloria Ojochegbe","Matthew Happiness Ayinda","Mbamara Amarachukwu Callista","Mbelobi Praise Kelechi","Memoye Isephemugh Daniella","Mene Franca Mabamije",
+            "Menkiti Ebube Cynthia","Mgbodile Jennifer Makuochukwu","Micah Triumph Shanyet Eshiomughamhe","Michael Mary Godiya","Micheal Favour Ubong","Mmuoneke Patrick Chibuike","Mohammed Ladidi Aisha","Mohammed Ruth Kudirat","Mojeed Hairat Tolani","Monday Prosper Divine",
+            "Moses Etombi Victoria Seun","Mudi Blessing","Muhammad Abdullahi","Muhammad Abdulmalik Sadiq","Muhammad Abdulmumin Bawada","Muhammad Abubakar Badaru","Muhammad Alamin Muhammad","Muhammad Awwal Musa","Muhammad Jamiu Ibrahim","Muhammad Nasiru",
+            "Muhammadulhadi Abdulsalam Yara","Muhammed Aisha","Muhammed Fatima Zara","Muhammed Mubina","Muhammed Rukayat","Muritala Hajarat Idowu","Musa Fulerah Ummee","Musa Goodluck Abraham","Musa Habiba","Musa Mitchele Etsonsire",
+            "Mustapha Hauwa Arafah","Mustapha Muhammad Abdulsalam","Mustapha Muhammad Al-Ameen Usman","Mustapha Nafisat Olawumi","Nasiru Faiza Onize","Nathaniel Amarachi Marvellous","Ndochukwu Chinenye Esther","Ndubueze Emmanuel Akachukwu","Ndubuisi Chikamso Joy","Ndubuisi Victor Chisom",
+            "Ndukwu Assumpta Gifechukwu","Ngbede Samuel Munachiso","Nku Miracle","Nkwocha Chikamso Victory","Nnakwe Maryann Ifeyinwa","Nnamani Blessing Odinakachukwu","Nnamani Daniel Uchechukwu","Nnamdi Oluchi Happiness","Nwachukwu Praise Chimemeriwo","Nwafor Charles Chinweike",
+            "Nwando Bright Chiagozelam","Nwaogu Amarachi","Nwodom Chidara Blessing","Nyam Agnes Bella","Oba Cherish","Obadiah Veronica Miabdong","Obansa Muhammed","Obasohan Dominion Osaze","Obasuyi Peniel Nosarieme","Obetta Ozioma Light",
+            "Obeya Ochidoma Dominic-Juniour","Obi Chiedozie Chidi","Obi Nancy Barong","Obiefuna Marycynthia Ogochukwu","Obikobe Chioma Emmanuella","Obilor Judith Ifeoma","Obinna Miracle","Obinna Perfect","Odii Catherine Munachimso","Odike Simon Ojonugwa",
+            "Odoh Michael Chijindu","Odomba Sabdat Ize","Odubiyi Fawaz Daniel","Oduntan Babatunde Kameel","Odutolu Victor Iyanuoluwa","Ofoegbu Goodluck Michael","Ogah Success Omagu","Ogar Regina Ekwork","Ogbode Goodnews","Ogbogo Thankgod Onah",
+            "Ogbole David Goodluck","Ogbonna Chidiebere Mary","Ogbonna Ikechukwu Favour","Ogbuagu Mercy","Ogbuefi Chima Michael","Ogenyi Favour Eneh","Ogenyi Patricia Somtochukwu","Ogo Michael Oche","Ogungbe Deborah Eniola","Ogunmokun Cherish Adeyemi",
+            "Ogunmola Francis Jomiloju","Ogwuche Augustine Miracle","Ogwurumba Oluomachi Sonia","Ohakwe Favour","Ohikere Abdulbasit Adavize","Oibochie Emmanuel Abaseta","Ojonugwa Eleojo Ireoluwa","Okafor Chiemelie Mary","Okechukwu Felix","Okechukwu Kingsley Nzube",
+            "Okechukwu Miracle Nzubechi","Okeke Tovia Ogechukwu","Okeowo Omowunmi Sarah","Okere Naomi Chioma","Okeyede Ahmed Ayomide","Okezue Miracle Chimfurumnanya","Okoli Chikanyima Daniel Chinweuba","Okoli Chinemerem David Orisaemeka","Okoli Evandonald Ekenedilichukwu","Okolo Chiamaka Miracle",
+            "Okolo Chikamso Mary-Princess","Okono Sochukwukaima Martin","Okori Blessed Clement","Okoro Kingdavid Onyiekachi","Okoro Luke Chukwuma","Okoromi Osasele Peace","Okoye Onyinyechi Dawnqueen","Okpara Chidimma Meekness","Okpe Mercy","Okuepusu Rebecca Hunuwa",
+            "Okunade Adejoke Nafisat","Okusanya Halimat Opemipo","Okwori Jennifer Chinecherem","Olabisi Precious Eniola","Oladele Mustapha Korede","Oladoyinbo Emmanuel Oluseun","Olalere Dominion Oluwatoyin","Olanipekum David Oluwanifemi","Olanipekun Daniel Kayode","Olaojo Elizabeth Oluwanifemi",
+            "Olarewaju Ayomide Oreoluwa","Olatunde Mercy Moses","Olawale Benedicta Ebunlomo","Oleru Gabriel Nnameaka","Olorunlomola Oladapo Blessed","Oloruntoba Success","Olugbe Obed Olamilekan","Olusegun Esther Oluwadunsi","Olushola Tobiloba Marvellous","Oluwaseyi Moyin Helen",
+            "Omeke Chekwube Emmanuella","Omori Favour Omori","Omorogie Samuel A","Omorogieva Bliss Nosazena Ifunaya","Omotayo Precious Oreoluwa","Omotayo Sheyi Wisdom","Omowumi Emmanuel Nifemi","Onaji Prosper Ameh","Onalu Chiamaka Elizabeth","Oni Michael Olaniyi",
+            "Onowuh Chidiebube Akpuh Micheal","Onuche Godswill Unekwuojo","Onuh Ugbala Jane","Onyeanu Benedict Chidiebube","Onyebuchi Abigail Udochukwu","Onyebuchi Glory Ebubechi","Onyebuchi Jennifer Onyinyechukwu","Onyemaechi Chigozirim Janny","Onyishi Judith Febechukwu","Onyishi Nneoma Ada",
+            "Oparinde Johnson Anuoluwapo","Orafu Emmanuel Chimzaram","Oritsetimeyin Eyituoyo Wisdom","Orji Jecinta Chiziterem","Orji Timothy Egwuzoronmachi","Osaigbovo Itohan Faith","Osarenkhoe Nosa Divine","Osigbeme Jeffrey Oshoke","Osigwe Ifeanyi Michael","Osimen Favour Osebhagiajeme",
+            "Osukwu Faith Ihuoma","Otigba Ngozi Favour","Otsonu Grace Ene","Otu Divine Muji","Otuyemi Oyinkansola Faith","Owusu Isaac Ansah","Oyeleke Oluwatosin Patience","Oyetakin Joseph","Oyetokun Olatunji Emmanuel","Oyewole David Olamiposi",
+            "Oyeyemi Oluwafisayomi Omotade","Ozioko Emmanuel Chidera","Oziri Chukwubuike Michael","Paul Oyiza Rebecca","Peter Favour","Peter Miracle Nmerichukwu","Peterson Daniel","Philip Gideon Chukwuemeka","Polycarp Blessing Bassey","Rahmatu Umar",
+            "Rasheed Aliyah Adewunmi","Rotimi Joshua Olatunji","Royal Onyebuchi Ewomazino","Sadiq Hafsat Ometere","Saibu Kayode Tunde","Saidu Anas Ahmad","Salami Anjola Oluwa Bashirat","Salihu Abdullahi Kabir","Sam Daniel Monokpo","Sampson Kelechi Victory",
+            "Samson Ayobami Victory","Samson Bright Chibueze","Samson Michael Kolo","Samuel Divine Oluwakemi","Samuel Favour Okon","Samuel Mercy Chidera","Samuel Oluwaseyi Isaac","Samuel Udo Miracle Uchanma","Sani Sa'adatu Ja'afaru","Shaibu Fatima Oyiza",
+            "Shaibu Peace Ojomugbokenyode","Shefiu-Badmos Zainab Motunrayo","Shehu Ibrahim Utono","Shehu Maryam Alake","Shodolamu Bilikisu Ajoke","Showunmi Tolulope Prisca","Shuaibu Jibril","Sigah Shalom","Silas Plangnan Dakup","Simeon Rita Ojone",
+            "Siyaka Husseina Oyiza","Solomon Judith","Stanley Deborah Elohozino","Stephen Divine Chisom","Stephen Ofure Laurena","Suleiman Khadijat Habibu","Sunday David Oloche","Sunday Divine Ugbedeojo","Sunday Emmanuel","Sunday Favour Boluwatife",
+            "Sunday Joy","Sunday Selina","Sunusi Fatima Muhammad","Surajudeen Abdulbaqi Gbolahan","Tahiru Firdausi Ojimaojo","Taiwo Princess Elizabeth","Taiwo Samuel Ayomiposy","Taofiq Abubakar-Sadiq Akanbi","Tego Esther Inemesit","Teslim Jemilat Bolanle",
+            "Thompson Treasure Isioma","Tiamiyu Fawziyyah Omotayo","Tolorunloba Victory Nifemi","Toni-Nnamani Nneoma Frances","Uaifo Gabriel Aidolojie","Uche Chidimma Mercy","Uchenna Ephraim Kwenyerechukwu","Udekwe Daniel Okeanyichukwu","Uduehi Gabriel Ohiole","Ufot Edidiong Akpankan",
+            "Ufuoma Deborah Eseoghene","Ugochukwu Chidera Emmanuel","Ugochukwu Christiana Anulika","Ugochukwu Elijah Praise","Ugwoke Chisom Blessing","Ugwu Dikachi Emmanuel","Ugwu Jennifer Chukwuemerie","Ugwu Onyinyechukwu Lucy","Ugwuanyi Love Ngozi","Ugwueze Chioma Gift",
+            "Uhalla Favour Francisca","Ukeje Mercy Ezinne","Umar Halima Faruk","Umar Yusuf Faruk","Umaru Gift Eleojo","Umeh Victory Chidiebube","Urum Samuel Udochukwu","Ushie Victor Chigozie","Usman Abdullahi Baba","Usman Fatimatu Zaharau",
+            "Usman Suraiya","Uthman Muhammad Maidala","Uwai Daniel","Uyanwanne Nnamdi Benedict","Uyoo Mary Myom","Uzodiagu Precious Chidera","Uzodimma Favour Adachukwu","Uzoma Obiajulu Favour Joshua","Uzowulu Lucky Tochukwu","Victor Chukwunyere Victor",
+            "Vongfa Nanhan Holiness","Williams Miracle Osamone","Yahaya Khadijat Ekkan","Yahaya Ummulhaq Salihu","Yakubu Aliyu Yakubu","Yakubu Julde Jabir","Yanmelu Hembafan Perpetual","Young Praisegod Ezionyinye","Yunana Jummai Lukpo","Yusuf Korede",
+            "Yusuf Nafisat","Yusuf Shalom Praise","Yusuf Yusuf Namallam","Zubair Mukhtaar Olashubomi"
+        ];
+
+        // Global State
+        let studentsDatabase = [];
+        let filteredStudents = [];
+        let currentPage = 1;
+        const pageSize = 24;
+        let activeStudent = null;
+        let isLocked = false;
+        let loggedInStudent = null;
+        let isAdminLoggedIn = false;
+        let cameraStream = null;
+
+        // Photo cleaner image adjustments
+        let currentRotation = 0;
+        let rawUnfilteredImageSrc = null;
+
+        // Stores
+        let reviewsStore = {};
+        let autographsStore = {};
+
+        // Canvas drawing state
+        let isDrawing = false;
+        let currentInkColor = '#0369a1';
+        let autographCtx = null;
+
+        function formatHiddenYearDOB(dobStr) {
+            if (!dobStr) return "";
+            const parts = dobStr.split('-');
+            if (parts.length === 3) {
+                return `${parts[1]} ${parts[2]}`;
+            }
+            return dobStr;
+        }
+
+        // Initialize Candidate Dataset
+        function initStudentsData() {
+            const explicitMap = new Map();
+            RAW_STUDENT_DATA.forEach(item => {
+                explicitMap.set(item[0], {
+                    sNo: item[0],
+                    candidateCode: `CAN-2026-${String(item[0]).padStart(3, '0')}`,
+                    examNo: item[1], // Stored privately for verification only
+                    name: item[2],
+                    gender: item[3],
+                    dobRaw: item[4],
+                    dobDisplay: formatHiddenYearDOB(item[4]),
+                    photo: null,
+                    quote: ""
+                });
+            });
+
+            const result = [];
+            for (let i = 1; i <= 714; i++) {
+                if (explicitMap.has(i)) {
+                    result.push(explicitMap.get(i));
+                } else {
+                    const examCode = (4020204000 + i).toString();
+                    const name = FULL_NAMES_LIST[i - 1] || `Candidate ${i}`;
+                    const isFemale = name.includes("Miracle") || name.includes("Blessing") || name.includes("Favour") || name.includes("Joy") || name.includes("Chiamaka") || name.includes("Grace") || name.includes("Esther") || name.includes("Aisha") || name.includes("Fatima") || (i % 2 === 0);
+                    const rawDob = `2010-Mar-${(i % 28) + 1}`;
+                    
+                    result.push({
+                        sNo: i,
+                        candidateCode: `CAN-2026-${String(i).padStart(3, '0')}`,
+                        examNo: examCode,
+                        name: name,
+                        gender: isFemale ? "Female" : "Male",
+                        dobRaw: rawDob,
+                        dobDisplay: formatHiddenYearDOB(rawDob),
+                        photo: null,
+                        quote: ""
+                    });
+                }
+            }
+            return result;
+        }
+
+        // Window Load Initialization
+        window.onload = function() {
+            studentsDatabase = initStudentsData();
+            filteredStudents = [...studentsDatabase];
+            
+            initFirebaseAndSync();
+            renderGallery();
+            populateAdminDropdown();
+            setupAutographCanvas();
+        };
+
+        function setupAutographCanvas() {
+            const canvas = document.getElementById('autograph-canvas');
+            if (!canvas) return;
+            autographCtx = canvas.getContext('2d');
+            autographCtx.lineWidth = 2.5;
+            autographCtx.lineCap = 'round';
+            autographCtx.strokeStyle = currentInkColor;
+
+            function getTouchPos(canvasDom, touchEvent) {
+                const rect = canvasDom.getBoundingClientRect();
+                return {
+                    x: touchEvent.touches[0].clientX - rect.left,
+                    y: touchEvent.touches[0].clientY - rect.top
+                };
+            }
+
+            function getMousePos(canvasDom, mouseEvent) {
+                const rect = canvasDom.getBoundingClientRect();
+                return {
+                    x: mouseEvent.clientX - rect.left,
+                    y: mouseEvent.clientY - rect.top
+                };
+            }
+
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                const pos = getMousePos(canvas, e);
+                autographCtx.beginPath();
+                autographCtx.moveTo(pos.x, pos.y);
+            });
+
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDrawing) return;
+                const pos = getMousePos(canvas, e);
+                autographCtx.lineTo(pos.x, pos.y);
+                autographCtx.stroke();
+            });
+
+            window.addEventListener('mouseup', () => { isDrawing = false; });
+
+            // Touch events for mobile tablets
+            canvas.addEventListener('touchstart', (e) => {
+                isDrawing = true;
+                const pos = getTouchPos(canvas, e);
+                autographCtx.beginPath();
+                autographCtx.moveTo(pos.x, pos.y);
+                e.preventDefault();
+            });
+
+            canvas.addEventListener('touchmove', (e) => {
+                if (!isDrawing) return;
+                const pos = getTouchPos(canvas, e);
+                autographCtx.lineTo(pos.x, pos.y);
+                autographCtx.stroke();
+                e.preventDefault();
+            });
+
+            canvas.addEventListener('touchend', () => { isDrawing = false; });
+        }
+
+        function setInkColor(color) {
+            currentInkColor = color;
+            if (autographCtx) autographCtx.strokeStyle = color;
+        }
+
+        function clearAutographCanvas() {
+            const canvas = document.getElementById('autograph-canvas');
+            if (canvas && autographCtx) {
+                autographCtx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        function saveAutograph() {
+            if (!activeStudent) return;
+            const canvas = document.getElementById('autograph-canvas');
+            const dataUrl = canvas.toDataURL('image/png');
+
+            if (!autographsStore[activeStudent.candidateCode]) {
+                autographsStore[activeStudent.candidateCode] = [];
+            }
+
+            const signerName = loggedInStudent ? loggedInStudent.name : 'Classmate';
+            
+            const newAutograph = {
+                signer: signerName,
+                img: dataUrl,
+                date: new Date().toLocaleDateString()
+            };
+
+            autographsStore[activeStudent.candidateCode].unshift(newAutograph);
+            saveAutographToFirestore(activeStudent.candidateCode, newAutograph);
+
+            clearAutographCanvas();
+            renderModalAutographs();
+        }
+
+        function renderModalAutographs() {
+            if (!activeStudent) return;
+            const container = document.getElementById('autographs-display');
+            container.innerHTML = '';
+
+            const list = autographsStore[activeStudent.candidateCode] || [];
+            if (list.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-[11px] text-slate-400 italic text-center py-2">No digital autographs signed yet. Draw above to leave your signature!</p>`;
+                return;
+            }
+
+            list.forEach(item => {
+                const box = document.createElement('div');
+                box.className = "bg-white p-2 rounded-lg border border-slate-200 shadow-sm text-center relative space-y-1";
+                box.innerHTML = `
+                    <img src="${item.img}" alt="Signature" class="h-12 mx-auto object-contain">
+                    <div class="text-[9px] text-slate-500 font-bold border-t border-slate-100 pt-1 flex justify-between px-1">
+                        <span class="text-amber-800">${escapeHtml(item.signer)}</span>
+                        <span class="text-slate-400">${item.date}</span>
+                    </div>
+                `;
+                container.appendChild(box);
+            });
+        }
+
+        // Navigation Controller
+        function navigateTo(viewName) {
+            if (viewName !== 'admin-login' && cameraStream) {
+                stopLiveCamera();
+            }
+
+            document.getElementById('view-gallery').classList.add('hidden');
+            document.getElementById('view-student-login').classList.add('hidden');
+            document.getElementById('view-student-editor').classList.add('hidden');
+            document.getElementById('view-admin-login').classList.add('hidden');
+            document.getElementById('view-admin-dashboard').classList.add('hidden');
+
+            if (viewName === 'gallery') {
+                document.getElementById('view-gallery').classList.remove('hidden');
+                renderGallery();
+            } else if (viewName === 'student-login') {
+                if (loggedInStudent) {
+                    openStudentEditor();
+                } else {
+                    document.getElementById('view-student-login').classList.remove('hidden');
+                }
+            } else if (viewName === 'admin-login') {
+                if (isAdminLoggedIn) {
+                    document.getElementById('view-admin-dashboard').classList.remove('hidden');
+                } else {
+                    document.getElementById('view-admin-login').classList.remove('hidden');
+                }
+            }
+        }
+
+        // Render Student Grid Gallery (PRIVACY PROTECTED: Exam numbers hidden)
+        function renderGallery() {
+            const grid = document.getElementById('students-grid');
+            grid.innerHTML = '';
+
+            const total = filteredStudents.length;
+            document.getElementById('student-count-badge').innerText = total;
+
+            const totalPages = Math.ceil(total / pageSize) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            document.getElementById('page-indicator').innerText = `Page ${currentPage} of ${totalPages}`;
+            document.getElementById('prev-page-btn').disabled = currentPage === 1;
+            document.getElementById('next-page-btn').disabled = currentPage === totalPages;
+
+            const startIdx = (currentPage - 1) * pageSize;
+            const pageItems = filteredStudents.slice(startIdx, startIdx + pageSize);
+
+            if (pageItems.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-slate-500 bg-white rounded-2xl border border-slate-200">
+                        <i class="fa-solid fa-graduation-cap text-4xl mb-3 text-slate-300"></i>
+                        <p class="font-medium text-base">No students matched your search criteria.</p>
+                        <button onclick="resetFilters()" class="mt-3 text-xs text-brand-600 font-bold hover:underline">Reset Search</button>
+                    </div>
+                `;
+                return;
+            }
+
+            pageItems.forEach(student => {
+                const defaultAvatar = student.gender === 'Female' 
+                    ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400'
+                    : 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=400';
+                
+                const photoSrc = student.photo || defaultAvatar;
+                const reviewCount = (reviewsStore[student.candidateCode] || []).length;
+                const autographCount = (autographsStore[student.candidateCode] || []).length;
+
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group cursor-pointer";
+                card.onclick = () => openStudentModal(student.candidateCode);
+
+                card.innerHTML = `
+                    <div>
+                        <div class="relative h-48 bg-slate-100 overflow-hidden">
+                            <img src="${photoSrc}" alt="${student.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute top-3 left-3">
+                                <span class="bg-brand-900/90 backdrop-blur-md text-amber-300 text-[10px] font-black px-2.5 py-1 rounded-md border border-amber-500/30 shadow">
+                                    Candidate #${student.sNo}
+                                </span>
+                            </div>
+                            <div class="absolute top-3 right-3">
+                                <span class="bg-white/90 backdrop-blur-md text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded shadow">
+                                    ${student.gender}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="p-4 space-y-1.5">
+                            <h3 class="font-serif font-bold text-slate-900 text-base leading-snug group-hover:text-brand-600 transition">
+                                ${student.name}
+                            </h3>
+                            <p class="text-xs text-slate-500 italic line-clamp-2">
+                                ${student.quote ? `"${student.quote}"` : 'No quote added yet.'}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="px-4 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <span class="flex items-center text-slate-600 font-medium space-x-2">
+                            <span><i class="fa-solid fa-comment-dots text-brand-500 mr-1"></i> ${reviewCount}</span>
+                            <span><i class="fa-solid fa-signature text-amber-600 mr-1"></i> ${autographCount}</span>
+                        </span>
+                        <span class="text-brand-600 font-bold group-hover:translate-x-1 transition flex items-center">
+                            View <i class="fa-solid fa-arrow-right text-[10px] ml-1"></i>
+                        </span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Filter Logic (Exam numbers hidden from search criteria)
+        function filterStudents() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            const gender = document.getElementById('gender-filter').value;
+            const photoFilter = document.getElementById('photo-filter').value;
+
+            filteredStudents = studentsDatabase.filter(student => {
+                const matchesName = student.name.toLowerCase().includes(query) || `candidate #${student.sNo}`.includes(query) || student.candidateCode.toLowerCase().includes(query);
+                const matchesGender = gender === 'all' || student.gender === gender;
+                const matchesPhoto = photoFilter === 'all' || (photoFilter === 'with-photo' && student.photo !== null);
+
+                return matchesName && matchesGender && matchesPhoto;
+            });
+
+            currentPage = 1;
+            renderGallery();
+        }
+
+        function changePage(delta) {
+            currentPage += delta;
+            renderGallery();
+            window.scrollTo({ top: 300, behavior: 'smooth' });
+        }
+
+        function resetFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('gender-filter').value = 'all';
+            document.getElementById('photo-filter').value = 'all';
+            filterStudents();
+        }
+
+        // Student Modal Display
+        function openStudentModal(candidateCode) {
+            const student = studentsDatabase.find(s => s.candidateCode === candidateCode);
+            if (!student) return;
+
+            activeStudent = student;
+
+            const defaultAvatar = student.gender === 'Female' 
+                ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400'
+                : 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=400';
+
+            document.getElementById('modal-student-img').src = student.photo || defaultAvatar;
+            document.getElementById('modal-student-name').innerText = student.name;
+            document.getElementById('modal-candidate-badge').innerText = `#${student.sNo}`;
+            
+            // Privacy protection: Show Candidate S/N and Birthdate only
+            document.getElementById('modal-student-meta').innerText = `${student.gender} • Candidate Code: CAN-2026-${String(student.sNo).padStart(3, '0')} • Birthday: ${student.dobDisplay}`;
+            document.getElementById('modal-quote').innerText = student.quote ? `"${student.quote}"` : '"No senior quote recorded yet."';
+
+            // Auto fill logged in reviewer name if logged in
+            if (loggedInStudent) {
+                document.getElementById('reviewer-name').value = loggedInStudent.name;
+            } else {
+                document.getElementById('reviewer-name').value = '';
+            }
+
+            clearAutographCanvas();
+            renderModalAutographs();
+            renderModalReviews();
+            document.getElementById('profile-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('profile-modal').classList.add('hidden');
+            activeStudent = null;
+        }
+
+        function updateCharCount() {
+            const txt = document.getElementById('review-text').value;
+            document.getElementById('char-count').innerText = `${txt.length} / 250`;
+        }
+
+        // Verified Review System (Exam Code checked privately, author name used for display)
+        function renderModalReviews() {
+            if (!activeStudent) return;
+            const list = document.getElementById('modal-reviews-list');
+            list.innerHTML = '';
+
+            const reviews = reviewsStore[activeStudent.candidateCode] || [];
+            document.getElementById('review-count-tag').innerText = `${reviews.length} Memory Tributes`;
+
+            if (reviews.length === 0) {
+                list.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">No tributes posted yet. Be the first to leave a verified tribute for ${activeStudent.name}!</p>`;
+                return;
+            }
+
+            reviews.forEach((rev, idx) => {
+                const item = document.createElement('div');
+                item.className = "bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-1 relative group";
+                
+                const adminDelBtn = isAdminLoggedIn 
+                    ? `<button onclick="deleteReview('${activeStudent.candidateCode}', ${idx})" class="text-[10px] bg-rose-50 hover:bg-rose-100 text-rose-600 px-2 py-0.5 rounded font-bold ml-2">Delete</button>` 
+                    : '';
+
+                item.innerHTML = `
+                    <div class="flex justify-between items-center text-xs">
+                        <div class="flex items-center space-x-1.5">
+                            <span class="font-bold text-slate-800">${escapeHtml(rev.author)}</span>
+                            <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-1.5 py-0.5 rounded border border-emerald-200 flex items-center">
+                                <i class="fa-solid fa-circle-check mr-1 text-[9px]"></i> Verified Candidate
+                            </span>
+                            ${adminDelBtn}
+                        </div>
+                        <span class="text-[10px] text-slate-400">${rev.date}</span>
+                    </div>
+                    <p class="text-xs text-slate-500 font-medium">${escapeHtml(rev.rel || 'Classmate')}</p>
+                    <p class="text-xs text-slate-700 leading-relaxed pt-1">${escapeHtml(rev.text)}</p>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function submitReview() {
+            if (!activeStudent) return;
+            const authorName = document.getElementById('reviewer-name').value.trim();
+            const reviewerExam = document.getElementById('reviewer-exam').value.trim();
+            const rel = document.getElementById('reviewer-rel').value.trim() || 'Classmate';
+            const text = document.getElementById('review-text').value.trim();
+
+            if (!authorName) {
+                alert("Please enter your Full Name.");
+                return;
+            }
+
+            if (!reviewerExam) {
+                alert("Please enter your 10-digit Exam Code for private candidate verification.");
+                return;
+            }
+
+            // Private Verification: Check exam number against official candidate database
+            const reviewerStudent = studentsDatabase.find(s => s.examNo === reviewerExam);
+            if (!reviewerStudent) {
+                alert("Invalid Exam Code. Verification failed. Only registered candidates of GSS Kubwa Class of 2026 can post tributes.");
+                return;
+            }
+
+            if (!text || text.length < 5) {
+                alert("Please write a meaningful tribute (at least 5 characters).");
+                return;
+            }
+
+            if (!reviewsStore[activeStudent.candidateCode]) {
+                reviewsStore[activeStudent.candidateCode] = [];
+            }
+
+            const newReview = {
+                author: authorName,
+                rel: rel,
+                text: text,
+                date: new Date().toLocaleDateString()
+            };
+
+            reviewsStore[activeStudent.candidateCode].unshift(newReview);
+            saveReviewToFirestore(activeStudent.candidateCode, newReview);
+
+            document.getElementById('review-text').value = '';
+            document.getElementById('reviewer-exam').value = '';
+            updateCharCount();
+
+            renderModalReviews();
+            renderGallery();
+        }
+
+        function deleteReview(targetCandidateCode, index) {
+            if (!isAdminLoggedIn) return;
+            if (reviewsStore[targetCandidateCode] && reviewsStore[targetCandidateCode][index]) {
+                reviewsStore[targetCandidateCode].splice(index, 1);
+                saveReviewToFirestore(targetCandidateCode, null);
+                renderModalReviews();
+                renderGallery();
+            }
+        }
+
+        // Student Self-Service Login
+        function loginStudent() {
+            const nameInput = document.getElementById('student-login-name-input').value.trim();
+            const examInput = document.getElementById('student-exam-input').value.trim();
+            const errDiv = document.getElementById('student-login-error');
+
+            errDiv.classList.add('hidden');
+
+            if (!examInput) {
+                errDiv.innerText = "Please enter your 10-digit Examination Code.";
+                errDiv.classList.remove('hidden');
+                return;
+            }
+
+            const student = studentsDatabase.find(s => s.examNo === examInput);
+            if (!student) {
+                errDiv.innerText = "Examination Code not found in GSS Kubwa candidate list.";
+                errDiv.classList.remove('hidden');
+                return;
+            }
+
+            loggedInStudent = student;
+            document.getElementById('nav-student-label').innerText = student.name.split(' ')[0];
+            openStudentEditor();
+        }
+
+        function openStudentEditor() {
+            document.getElementById('view-student-login').classList.add('hidden');
+            document.getElementById('view-student-editor').classList.remove('hidden');
+
+            document.getElementById('edit-student-name').innerText = loggedInStudent.name;
+            document.getElementById('edit-student-code').innerText = `CANDIDATE CODE: ${loggedInStudent.candidateCode}`;
+            document.getElementById('edit-quote-input').value = loggedInStudent.quote || '';
+
+            const defaultAvatar = loggedInStudent.gender === 'Female' 
+                ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400'
+                : 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=400';
+
+            document.getElementById('edit-photo-preview').src = loggedInStudent.photo || defaultAvatar;
+
+            if (isLocked) {
+                document.getElementById('photo-lock-notice').classList.remove('hidden');
+                document.getElementById('student-photo-form-group').classList.add('opacity-50', 'pointer-events-none');
+            } else {
+                document.getElementById('photo-lock-notice').classList.add('hidden');
+                document.getElementById('student-photo-form-group').classList.remove('opacity-50', 'pointer-events-none');
+            }
+        }
+
+        function saveStudentProfile() {
+            if (!loggedInStudent) return;
+
+            const quote = document.getElementById('edit-quote-input').value.trim();
+            const photoInput = document.getElementById('edit-photo-input');
+
+            if (!isLocked && photoInput.files && photoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    loggedInStudent.photo = e.target.result;
+                    loggedInStudent.quote = quote;
+                    finishSaveStudent();
+                };
+                reader.readAsDataURL(photoInput.files[0]);
+            } else {
+                loggedInStudent.quote = quote;
+                finishSaveStudent();
+            }
+        }
+
+        function finishSaveStudent() {
+            saveStudentToFirestore(loggedInStudent);
+            alert("Profile updated successfully!");
+            renderGallery();
+            navigateTo('gallery');
+        }
+
+        function logoutStudent() {
+            loggedInStudent = null;
+            document.getElementById('nav-student-label').innerText = "Student Portal";
+            navigateTo('gallery');
+        }
+
+        // ================= ADMIN & PASSPORT BOOKLET RESTORATION STUDIO =================
+        function loginAdmin() {
+            const pass = document.getElementById('admin-passcode-input').value.trim();
+            const errDiv = document.getElementById('admin-login-error');
+
+            if (pass === 'admin2026') {
+                isAdminLoggedIn = true;
+                errDiv.classList.add('hidden');
+                navigateTo('admin-login');
+                updateAdminDashboardUI();
+            } else {
+                errDiv.innerText = "Invalid passcode. Standard admin passcode is admin2026";
+                errDiv.classList.remove('hidden');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            stopLiveCamera();
+            navigateTo('gallery');
+        }
+
+        function updateAdminDashboardUI() {
+            const lockBtn = document.getElementById('toggle-lock-btn');
+            if (isLocked) {
+                lockBtn.className = "bg-rose-600 hover:bg-rose-700 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow-md transition flex items-center space-x-2";
+                lockBtn.innerHTML = `<i class="fa-solid fa-lock"></i> <span>Unlock Student Edits</span>`;
+            } else {
+                lockBtn.className = "bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow-md transition flex items-center space-x-2";
+                lockBtn.innerHTML = `<i class="fa-solid fa-lock-open"></i> <span>Lock Student Edits</span>`;
+            }
+        }
+
+        function toggleSubmissionLock() {
+            isLocked = !isLocked;
+            updateAdminDashboardUI();
+            saveLockStateToFirestore(isLocked);
+        }
+
+        function populateAdminDropdown() {
+            const select = document.getElementById('admin-student-select');
+            if (!select) return;
+            select.innerHTML = '';
+            studentsDatabase.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.candidateCode;
+                opt.innerText = `#${s.sNo} - ${s.name}`;
+                select.appendChild(opt);
+            });
+            onAdminSelectStudent();
+        }
+
+        function onAdminSelectStudent() {
+            const code = document.getElementById('admin-student-select').value;
+            const student = studentsDatabase.find(s => s.candidateCode === code);
+            if (student) {
+                document.getElementById('admin-quote-input').value = student.quote || '';
+                const defaultAvatar = student.gender === 'Female' 
+                    ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400'
+                    : 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=400';
+                
+                rawUnfilteredImageSrc = student.photo || defaultAvatar;
+                document.getElementById('admin-preview-img').src = rawUnfilteredImageSrc;
+                resetFilterControls();
+            }
+        }
+
+        // Live Camera Capture with Framing Alignment Box
+        async function startLiveCamera() {
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: { ideal: 800 }, height: { ideal: 800 } } });
+                const videoEl = document.getElementById('camera-video');
+                videoEl.srcObject = cameraStream;
+                videoEl.classList.remove('hidden');
+                document.getElementById('framing-guide').classList.remove('hidden');
+                document.getElementById('admin-preview-img').classList.add('hidden');
+                document.getElementById('camera-placeholder').classList.add('hidden');
+
+                document.getElementById('start-cam-btn').classList.add('hidden');
+                document.getElementById('snap-cam-btn').classList.remove('hidden');
+                document.getElementById('stop-cam-btn').classList.remove('hidden');
+            } catch (err) {
+                alert("Could not start camera. Please ensure camera permissions are granted in your browser settings.");
+            }
+        }
+
+        function captureCameraSnapshot() {
+            const video = document.getElementById('camera-video');
+            const canvas = document.getElementById('snapshot-canvas');
+            const ctx = canvas.getContext('2d');
+
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            rawUnfilteredImageSrc = canvas.toDataURL('image/jpeg', 0.9);
+
+            document.getElementById('admin-preview-img').src = rawUnfilteredImageSrc;
+            document.getElementById('admin-preview-img').classList.remove('hidden');
+            video.classList.add('hidden');
+            document.getElementById('framing-guide').classList.add('hidden');
+
+            stopLiveCamera();
+            applyAutoPaperCleanPreset();
+        }
+
+        function stopLiveCamera() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            document.getElementById('camera-video').classList.add('hidden');
+            document.getElementById('framing-guide').classList.add('hidden');
+            document.getElementById('admin-preview-img').classList.remove('hidden');
+            document.getElementById('start-cam-btn').classList.remove('hidden');
+            document.getElementById('snap-cam-btn').classList.add('hidden');
+            document.getElementById('stop-cam-btn').classList.add('hidden');
+        }
+
+        function previewFileImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    rawUnfilteredImageSrc = e.target.result;
+                    document.getElementById('admin-preview-img').src = rawUnfilteredImageSrc;
+                    document.getElementById('admin-preview-img').classList.remove('hidden');
+                    document.getElementById('camera-video').classList.add('hidden');
+                    resetFilterControls();
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // PASSPORT RESTORATION & PAPER CLEANER ENGINE
+        function setFilterPreset(preset) {
+            if (preset === 'paper-clean') {
+                document.getElementById('slider-contrast').value = 135;
+                document.getElementById('slider-brightness').value = 110;
+                document.getElementById('slider-saturate').value = 115;
+                document.getElementById('slider-warmth').value = -10;
+            } else if (preset === 'passport-hd') {
+                document.getElementById('slider-contrast').value = 145;
+                document.getElementById('slider-brightness').value = 105;
+                document.getElementById('slider-saturate').value = 135;
+                document.getElementById('slider-warmth').value = 0;
+            } else if (preset === 'vintage') {
+                document.getElementById('slider-contrast').value = 150;
+                document.getElementById('slider-brightness').value = 110;
+                document.getElementById('slider-saturate').value = 0;
+                document.getElementById('slider-warmth').value = 0;
+            } else if (preset === 'original') {
+                resetFilterControls();
+            }
+            applyImageFilters();
+        }
+
+        function applyAutoPaperCleanPreset() {
+            setFilterPreset('paper-clean');
+        }
+
+        function resetFilterControls() {
+            document.getElementById('slider-contrast').value = 100;
+            document.getElementById('slider-brightness').value = 100;
+            document.getElementById('slider-saturate').value = 100;
+            document.getElementById('slider-warmth').value = 0;
+            currentRotation = 0;
+            applyImageFilters();
+        }
+
+        function rotateImage() {
+            currentRotation = (currentRotation + 90) % 360;
+            applyImageFilters();
+        }
+
+        function applyImageFilters() {
+            const contrast = document.getElementById('slider-contrast').value;
+            const brightness = document.getElementById('slider-brightness').value;
+            const saturate = document.getElementById('slider-saturate').value;
+            const warmth = document.getElementById('slider-warmth').value;
+
+            document.getElementById('val-contrast').innerText = `${contrast}%`;
+            document.getElementById('val-brightness').innerText = `${brightness}%`;
+            document.getElementById('val-saturate').innerText = `${saturate}%`;
+            document.getElementById('val-warmth').innerText = `${warmth}°`;
+
+            const imgEl = document.getElementById('admin-preview-img');
+            imgEl.style.filter = `contrast(${contrast}%) brightness(${brightness}%) saturate(${saturate}%) hue-rotate(${warmth}deg)`;
+            imgEl.style.transform = `rotate(${currentRotation}deg)`;
+        }
+
+        // Bake CSS Filter pipeline into final Data URL before saving
+        function getBakedRestoredPhotoDataUrl() {
+            const img = document.getElementById('admin-preview-img');
+            if (!img || !img.src) return null;
+
+            const canvas = document.getElementById('filter-processing-canvas');
+            const ctx = canvas.getContext('2d');
+
+            const contrast = document.getElementById('slider-contrast').value;
+            const brightness = document.getElementById('slider-brightness').value;
+            const saturate = document.getElementById('slider-saturate').value;
+            const warmth = document.getElementById('slider-warmth').value;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+
+            // Center rotation
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            ctx.rotate((currentRotation * Math.PI) / 180);
+            ctx.filter = `contrast(${contrast}%) brightness(${brightness}%) saturate(${saturate}%) hue-rotate(${warmth}deg)`;
+
+            ctx.drawImage(img, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
+            ctx.restore();
+
+            return canvas.toDataURL('image/jpeg', 0.88);
+        }
+
+        function saveAdminStudentEdit() {
+            const candidateCode = document.getElementById('admin-student-select').value;
+            const student = studentsDatabase.find(s => s.candidateCode === candidateCode);
+            if (!student) return;
+
+            const quote = document.getElementById('admin-quote-input').value.trim();
+            const restoredPhoto = getBakedRestoredPhotoDataUrl();
+
+            if (restoredPhoto) {
+                student.photo = restoredPhoto;
+            }
+            student.quote = quote;
+
+            saveStudentToFirestore(student);
+            alert(`Restored passport & details saved for ${student.name}!`);
+            renderGallery();
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+
+        // ================= FIREBASE REALTIME SYNCHRONIZATION =================
+        let db = null;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'gss-kubwa-yearbook-2026';
+
+        function initFirebaseAndSync() {
+            try {
+                if (typeof __firebase_config !== 'undefined') {
+                    const firebaseConfig = JSON.parse(__firebase_config);
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(firebaseConfig);
+                    }
+                    db = firebase.firestore();
+
+                    firebase.auth().signInAnonymously().then(() => {
+                        listenToFirestore();
+                    }).catch(err => console.log("Firebase auth warning: ", err));
+                }
+            } catch (e) {
+                console.log("Standalone local mode active");
+            }
+        }
+
+        function listenToFirestore() {
+            if (!db) return;
+
+            db.collection('artifacts').doc(appId).collection('public').doc('data').collection('students')
+                .onSnapshot(snapshot => {
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        const student = studentsDatabase.find(s => s.candidateCode === doc.id || s.examNo === doc.id);
+                        if (student) {
+                            if (data.photo) student.photo = data.photo;
+                            if (data.quote) student.quote = data.quote;
+                        }
+                    });
+                    renderGallery();
+                });
+
+            db.collection('artifacts').doc(appId).collection('public').doc('data').collection('settings').doc('config')
+                .onSnapshot(doc => {
+                    if (doc.exists) {
+                        isLocked = doc.data().isLocked || false;
+                        updateAdminDashboardUI();
+                    }
+                });
+
+            db.collection('artifacts').doc(appId).collection('public').doc('data').collection('reviews')
+                .onSnapshot(snapshot => {
+                    reviewsStore = {};
+                    snapshot.forEach(doc => {
+                        reviewsStore[doc.id] = doc.data().list || [];
+                    });
+                    renderGallery();
+                    if (activeStudent) renderModalReviews();
+                });
+
+            db.collection('artifacts').doc(appId).collection('public').doc('data').collection('autographs')
+                .onSnapshot(snapshot => {
+                    autographsStore = {};
+                    snapshot.forEach(doc => {
+                        autographsStore[doc.id] = doc.data().list || [];
+                    });
+                    renderGallery();
+                    if (activeStudent) renderModalAutographs();
+                });
+        }
+
+        function saveStudentToFirestore(student) {
+            if (!db) return;
+            db.collection('artifacts').doc(appId).collection('public').doc('data').collection('students').doc(student.candidateCode).set({
+                photo: student.photo,
+                quote: student.quote,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+        }
+
+        function saveLockStateToFirestore(locked) {
+            if (!db) return;
+            db.collection('artifacts').doc(appId).collection('public').doc('data').collection('settings').doc('config').set({
+                isLocked: locked
+            }, { merge: true });
+        }
+
+        function saveReviewToFirestore(candidateCode, newReview) {
+            if (!db) return;
+            const currentList = reviewsStore[candidateCode] || [];
+            db.collection('artifacts').doc(appId).collection('public').doc('data').collection('reviews').doc(candidateCode).set({
+                list: currentList
+            });
+        }
+
+        function saveAutographToFirestore(candidateCode, newAutograph) {
+            if (!db) return;
+            const currentList = autographsStore[candidateCode] || [];
+            db.collection('artifacts').doc(appId).collection('public').doc('data').collection('autographs').doc(candidateCode).set({
+                list: currentList
+            });
+        }
+    </script>
+</body>
+</html>
