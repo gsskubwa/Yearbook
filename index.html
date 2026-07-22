@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GSS Kubwa Class of 2026 - Digital Yearbook</title>
+    <title>GSS Kubwa Class of 2026 - Digital Yearbook & Quick Snapper</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -34,6 +33,852 @@
                     }
                 }
             }
+        }
+    </script>
+    <style>
+        html, body {
+            overflow-x: hidden !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0;
+            padding: 0;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-emerald-200">
+
+    <!-- Header Navigation -->
+    <header class="bg-brand-900 text-white sticky top-0 z-40 shadow-md border-b border-brand-800 w-full">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="navigateTo('gallery')">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-amber-500 flex items-center justify-center font-bold text-brand-900 text-sm sm:text-base shadow-inner">
+                    GSSK
+                </div>
+                <div>
+                    <h1 class="font-serif font-bold text-sm sm:text-lg leading-tight text-amber-100">GSS KUBWA</h1>
+                    <p class="text-[9px] sm:text-[10px] text-brand-100 tracking-wider font-bold">CLASS OF 2026</p>
+                </div>
+            </div>
+
+            <!-- Nav Controls -->
+            <nav class="flex items-center space-x-1 sm:space-x-2">
+                <button onclick="navigateTo('gallery')" id="nav-gallery" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition bg-brand-800 text-white border border-brand-700">
+                    <i class="fa-solid fa-graduation-cap sm:mr-1 text-amber-300"></i><span class="hidden sm:inline">Students</span>
+                </button>
+                <button onclick="navigateTo('snapper')" id="nav-snapper" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition text-emerald-100 hover:bg-brand-800 bg-emerald-800/80 border border-emerald-600">
+                    <i class="fa-solid fa-camera sm:mr-1 text-amber-300"></i><span>Quick Snapper</span>
+                </button>
+                <button onclick="navigateTo('admin-login')" id="nav-admin" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition bg-amber-600 text-white hover:bg-amber-500 shadow-sm">
+                    <i class="fa-solid fa-cloud-arrow-up sm:mr-1"></i><span class="hidden sm:inline">Bulk Studio</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Global Banner -->
+    <div id="status-banner" class="bg-brand-800 border-b border-brand-700 text-emerald-100 text-[10px] sm:text-xs py-1.5 px-3 text-center font-bold shadow-inner w-full">
+        <i class="fa-solid fa-bolt text-amber-400 mr-1"></i> Select Name & Snap Mode Active: Snapped photos instantly save to candidate profiles!
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 py-4">
+
+        <!-- ================= GALLERY VIEW ================= -->
+        <section id="view-gallery" class="space-y-4">
+            <div class="bg-gradient-to-r from-brand-900 via-brand-800 to-slate-900 rounded-2xl p-4 sm:p-6 text-white shadow-xl relative overflow-hidden">
+                <div class="relative z-10 max-w-2xl space-y-1.5">
+                    <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Official 2026 Graduating Class</span>
+                    <h2 class="text-xl sm:text-3xl font-serif font-bold text-white">Government Secondary School, Kubwa</h2>
+                    <p class="text-brand-100 text-xs sm:text-sm leading-relaxed">Explore all 714 candidates. Search by student name or candidate number. Click on any student to view their profile.</p>
+                </div>
+            </div>
+
+            <!-- Search & Filter -->
+            <div class="bg-white rounded-xl p-3 shadow-sm border border-slate-200 space-y-3 md:space-y-0 md:flex md:items-center md:justify-between md:gap-4">
+                <div class="relative w-full md:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+                    <input type="text" id="search-input" oninput="filterStudents()" placeholder="Search candidate # (e.g. 14) or name..." class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+                <div class="flex items-center gap-2 text-xs font-bold w-full md:w-auto">
+                    <select id="gender-filter" onchange="filterStudents()" class="flex-1 sm:flex-none bg-slate-50 border border-slate-300 rounded-lg py-2 px-2.5 focus:ring-2 focus:ring-brand-500">
+                        <option value="all">All Genders</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                    <div class="bg-brand-50 text-brand-700 py-2 px-3 rounded-lg border border-brand-200 whitespace-nowrap">
+                        Showing: <span id="student-count-badge" class="font-black text-brand-900">714</span> / 714
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Grid -->
+            <div id="students-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+                <!-- Dynamically Populated -->
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex items-center justify-between bg-white px-3 py-2.5 rounded-xl border border-slate-200">
+                <button id="prev-page-btn" onclick="changePage(-1)" class="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold hover:bg-slate-200 disabled:opacity-40">
+                    <i class="fa-solid fa-chevron-left mr-1"></i> Prev
+                </button>
+                <span id="page-indicator" class="text-xs font-bold text-slate-600">Page 1 of 1</span>
+                <button id="next-page-btn" onclick="changePage(1)" class="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold hover:bg-slate-200 disabled:opacity-40">
+                    Next <i class="fa-solid fa-chevron-right ml-1"></i>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- ================= QUICK SNAPPER LIVE MODE ================= -->
+        <section id="view-snapper" style="display: none;" class="max-w-2xl mx-auto space-y-4">
+            <div class="bg-brand-900 text-white rounded-2xl p-4 sm:p-5 shadow-xl border border-brand-800 space-y-3">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span class="bg-amber-500 text-brand-900 text-[9px] font-black px-2 py-0.5 rounded shadow-sm tracking-wider">LIVE CAPTURE STUDIO</span>
+                        <h2 class="text-lg sm:text-xl font-serif font-bold mt-1">Select Name & Snap</h2>
+                    </div>
+                    <div class="bg-emerald-800 px-3 py-1.5 rounded-xl text-xs font-bold text-emerald-100 border border-emerald-600">
+                        Total Candidates: 714
+                    </div>
+                </div>
+                <p class="text-xs text-brand-100">Select the student below, position them in the camera frame, and press <b>Snap Photo</b>. It automatically links and saves to their profile instantly!</p>
+            </div>
+
+            <!-- Student Selector Card -->
+            <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-md border border-slate-200 space-y-4 text-xs">
+                <div class="space-y-1.5">
+                    <label class="block font-bold text-slate-700 uppercase">1. Search or Select Student Name *</label>
+                    <div class="flex gap-2">
+                        <select id="snapper-student-select" onchange="onSnapperStudentSelected()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 font-bold text-sm focus:ring-2 focus:ring-brand-500">
+                            <!-- Populated dynamically -->
+                        </select>
+                        <button onclick="jumpSnapper(-1)" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-3 rounded-xl" title="Previous Student"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button onclick="jumpSnapper(1)" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-3 rounded-xl" title="Next Student"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Active Student Card Preview -->
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <img id="snapper-current-img" src="" alt="Student Photo" class="w-14 h-14 rounded-xl object-cover border-2 border-amber-500 shadow bg-white">
+                        <div>
+                            <span id="snapper-current-code" class="bg-amber-500 text-slate-900 text-[9px] font-black px-1.5 py-0.5 rounded"></span>
+                            <h3 id="snapper-current-name" class="font-serif font-bold text-slate-900 text-sm mt-1"></h3>
+                            <p id="snapper-current-status" class="text-[10px] text-emerald-700 font-bold mt-0.5">Status: Ready for capture</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Camera Viewfinder & Controls -->
+                <div class="space-y-3">
+                    <div class="relative bg-slate-900 rounded-2xl overflow-hidden aspect-[4/3] flex items-center justify-center border-2 border-slate-800 shadow-inner">
+                        <video id="camera-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
+                        <canvas id="camera-canvas" style="display:none;"></canvas>
+                        
+                        <!-- Overlay guide -->
+                        <div class="absolute inset-0 border-4 border-white/20 pointer-events-none rounded-2xl flex items-center justify-center">
+                            <div class="w-48 h-60 border-2 border-dashed border-amber-400/60 rounded-xl"></div>
+                        </div>
+
+                        <div id="camera-placeholder" class="absolute inset-0 bg-slate-900 flex flex-col items-center justify-center p-6 text-center space-y-3">
+                            <i class="fa-solid fa-camera-retro text-4xl text-amber-400 animate-pulse"></i>
+                            <p class="text-slate-300 text-xs">Camera stream is offline. Click below to start live camera or upload directly from phone gallery.</p>
+                            <button onclick="startCameraStream()" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-black py-2.5 px-5 rounded-xl shadow text-xs transition">
+                                <i class="fa-solid fa-video mr-1"></i> Turn On Camera
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Action Snapping Buttons -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <button onclick="capturePhotoFromStream()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3.5 px-4 rounded-xl shadow-md transition text-xs flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-camera text-amber-300 text-base"></i>
+                            <span>SNAP & SAVE PHOTO</span>
+                        </button>
+                        
+                        <div class="relative">
+                            <input type="file" id="snapper-file-fallback" accept="image/*" onchange="handleSnapperFileFallback(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                            <div class="bg-brand-800 hover:bg-brand-700 border border-brand-600 text-white font-bold py-3.5 px-4 rounded-xl text-xs flex items-center justify-center space-x-2 transition w-full h-full">
+                                <i class="fa-solid fa-upload text-amber-300"></i>
+                                <span>Or Upload File Instead</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= STUDENT PROFILE MODAL ================= -->
+        <div id="profile-modal" style="display: none;" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto">
+            <div class="bg-white rounded-t-2xl sm:rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl my-0 sm:my-6 max-h-[92vh] flex flex-col">
+                <div class="bg-brand-900 text-white p-3.5 sm:p-5 flex items-start justify-between relative border-b border-brand-800">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <img id="modal-student-img" src="" alt="" class="w-14 h-14 sm:w-18 sm:h-18 rounded-xl object-cover border-2 border-white shadow bg-slate-200">
+                            <span id="modal-candidate-badge" class="absolute -bottom-1 -right-1 bg-amber-500 text-slate-900 text-[9px] font-black px-1.5 py-0.5 rounded shadow"></span>
+                        </div>
+                        <div>
+                            <span class="bg-brand-800 text-amber-300 border border-brand-700 text-[9px] font-bold px-1.5 py-0.5 rounded">GSS KUBWA CLASS OF 2026</span>
+                            <h3 id="modal-student-name" class="text-base sm:text-xl font-serif font-bold text-white leading-tight mt-0.5"></h3>
+                            <p id="modal-student-meta" class="text-brand-100 text-[10px] sm:text-xs mt-0.5"></p>
+                        </div>
+                    </div>
+                    <button onclick="closeModal()" class="text-slate-300 hover:text-white p-1.5 rounded-full hover:bg-brand-800">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <div class="p-4 sm:p-5 overflow-y-auto custom-scrollbar flex-grow space-y-4 text-xs">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div class="bg-amber-50/90 border-l-3 border-amber-500 p-2.5 rounded-r-lg shadow-sm">
+                            <p class="text-[9px] uppercase font-bold text-amber-800 flex items-center">
+                                <i class="fa-solid fa-quote-left mr-1 text-amber-500"></i> Senior Yearbook Quote
+                            </p>
+                            <p id="modal-quote" class="text-slate-800 italic font-serif mt-1 text-xs leading-relaxed"></p>
+                        </div>
+                        <div class="bg-emerald-50/90 border-l-3 border-emerald-500 p-2.5 rounded-r-lg shadow-sm">
+                            <p class="text-[9px] uppercase font-bold text-emerald-800 flex items-center">
+                                <i class="fa-solid fa-heart mr-1 text-emerald-600"></i> Hobbies & Interests
+                            </p>
+                            <p id="modal-hobbies" class="text-slate-800 font-medium mt-1 text-xs leading-relaxed"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================= BULK UPLOAD STUDIO LOGIN ================= -->
+        <section id="view-admin-login" style="display: none;" class="max-w-md mx-auto py-6">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                <div class="bg-brand-900 text-white p-5 text-center border-b-4 border-amber-500">
+                    <i class="fa-solid fa-cloud-arrow-up text-3xl mb-2 text-amber-400"></i>
+                    <h2 class="text-lg font-serif font-bold">Bulk Photo Uploader</h2>
+                    <p class="text-xs text-brand-100 mt-0.5">Upload folder of photos named after Candidate S/N (e.g. 1.jpg, 14.jpg)</p>
+                </div>
+                <div class="p-5 space-y-4 text-xs">
+                    <div id="admin-login-error" style="display: none;" class="bg-rose-50 border border-rose-200 text-rose-700 p-2.5 rounded-lg font-bold text-center"></div>
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase mb-1">Studio Passcode</label>
+                        <input type="password" id="admin-passcode-input" placeholder="Enter passcode" class="w-full border border-slate-300 rounded-xl p-3 font-bold text-center tracking-widest focus:ring-2 focus:ring-brand-500 text-sm">
+                        <p class="text-[10px] text-slate-500 mt-1.5 text-center">Passcode is: <code class="bg-slate-100 px-1 py-0.5 rounded text-emerald-700 font-bold">admin2026</code></p>
+                    </div>
+                    <button onclick="loginAdmin()" class="w-full bg-amber-600 hover:bg-amber-500 text-brand-900 font-black py-3 rounded-xl shadow-md transition text-xs">
+                        Enter Bulk Studio <i class="fa-solid fa-arrow-right-to-bracket ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= BULK FOLDER UPLOADER & MERGE DASHBOARD ================= -->
+        <section id="view-admin-dashboard" style="display: none;" class="space-y-4">
+            
+            <!-- Dashboard Header -->
+            <div class="bg-brand-900 text-white rounded-2xl p-4 shadow-xl border border-brand-800 space-y-3">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span class="bg-amber-500 text-brand-900 text-[9px] font-black px-2 py-0.5 rounded shadow-sm tracking-wider">BULK UPLOADER & MERGER</span>
+                        <h2 class="text-lg sm:text-xl font-serif font-bold mt-1">Bulk Photo Importer</h2>
+                    </div>
+                    <button onclick="logoutAdmin()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow">
+                        Exit
+                    </button>
+                </div>
+                
+                <!-- Backup Export/Import Buttons -->
+                <div class="grid grid-cols-2 gap-2 pt-2 border-t border-brand-800">
+                    <button onclick="exportYearbookDatabaseJSON()" class="bg-brand-800 hover:bg-brand-700 border border-brand-600 text-white font-bold py-2 px-2 rounded-lg text-[11px] flex items-center justify-center space-x-1.5 transition">
+                        <i class="fa-solid fa-file-export text-amber-400"></i>
+                        <span>Export Backup JSON</span>
+                    </button>
+                    
+                    <div class="relative">
+                        <input type="file" id="import-json-input" accept=".json" onchange="importYearbookDatabaseJSON(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        <div class="bg-emerald-700 hover:bg-emerald-600 border border-emerald-500 text-white font-bold py-2 px-2 rounded-lg text-[11px] flex items-center justify-center space-x-1.5 transition w-full h-full">
+                            <i class="fa-solid fa-file-import text-emerald-200"></i>
+                            <span>Import Backup JSON</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BULK FOLDER DROP BOX -->
+            <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-md border border-slate-200 space-y-4 text-xs">
+                <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl space-y-2">
+                    <h3 class="font-bold text-amber-900 text-sm flex items-center"><i class="fa-solid fa-folder-open text-amber-600 mr-2"></i> How to bulk upload photos:</h3>
+                    <p class="text-slate-700 leading-relaxed">Name your photo files after the candidate's S/N (e.g., <b>1.jpg</b>, <b>14.jpg</b>). You can select hundreds of files at once below!</p>
+                </div>
+
+                <div class="border-2 border-dashed border-emerald-500 bg-emerald-50/50 rounded-2xl p-6 text-center space-y-3">
+                    <i class="fa-solid fa-images text-4xl text-emerald-600"></i>
+                    <div>
+                        <p class="font-bold text-slate-800 text-sm">Select Multiple Photos from Phone or Laptop</p>
+                    </div>
+                    <label class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 px-6 rounded-xl shadow cursor-pointer transition text-xs">
+                        <i class="fa-solid fa-upload mr-2"></i> CHOOSE PHOTOS (BULK)
+                        <input type="file" id="bulk-photos-input" multiple accept="image/*" onchange="processBulkPhotosUpload(event)" class="hidden">
+                    </label>
+                </div>
+
+                <div id="bulk-upload-status" class="bg-slate-50 border border-slate-200 p-3 rounded-xl text-center font-bold text-slate-700">
+                    Status: <span id="bulk-count-matched" class="text-emerald-700">0</span> photos matched and saved!
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-brand-900 text-brand-200/50 text-[10px] py-4 mt-auto border-t border-brand-800 text-center">
+        <p class="font-bold text-brand-100">GSS Kubwa Class of 2026 Digital Yearbook</p>
+    </footer>
+
+    <!-- COMPLETE ENGINE -->
+    <script>
+        const DEFAULT_MOTTOES = [
+            "Excellence through perseverance and diligence.",
+            "The future belongs to those who believe in their dreams.",
+            "Strive for greatness in all endeavors.",
+            "Knowledge is light, character is strength."
+        ];
+        const DEFAULT_HOBBIES = ["Reading & Football", "Music & Debate", "Art & Sciences", "Technology & Coding"];
+
+        const RAW_STUDENT_DATA = [
+            [1, "4020204001", "Abass Khalid Ololade", "Male", "2010-Mar-20"],
+            [2, "4020204002", "Abayomi Kehinde Glory", "Female", "2009-Mar-30"],
+            [3, "4020204003", "Abayomi Taye Precious", "Female", "2009-Mar-30"],
+            [4, "4020204004", "Abdulazeez Abdulateef", "Male", "2010-May-31"],
+            [5, "4020204005", "Abdulazeez Jemila Omayoza", "Female", "2010-Feb-25"],
+            [6, "4020204006", "Abdulazeez Umeima Oyiza", "Female", "2010-May-19"],
+            [7, "4020204007", "Abdulganiyu Aeesha Oyereyi", "Female", "2009-Jul-27"],
+            [8, "4020204008", "Abdulhakeem Abdulbaqee Olayinka", "Male", "2010-Apr-11"],
+            [9, "4020204009", "Abdulhakeem Mustapha Adetunji", "Male", "2010-Jun-11"],
+            [10, "4020204010", "Abduljaleel Mujeebah Olabisi", "Female", "2010-Apr-27"]
+        ];
+
+        const FULL_NAMES_LIST = [
+            "Abass Khalid Ololade","Abayomi Kehinde Glory","Abayomi Taye Precious","Abdulazeez Abdulateef","Abdulazeez Jemila Omayoza","Abdulazeez Umeima Oyiza","Abdulganiyu Aeesha Oyereyi","Abdulhakeem Abdulbaqee Olayinka","Abdulhakeem Mustapha Adetunji","Abduljaleel Mujeebah Olabisi",
+            "Abdulkarim Shafa'atu","Abdullahi Aisha","Abdullahi Ibrahim","Abdullahi Labib","Abdullahi Mariyam","Abdullahi Muhammad Abubakar","Abdullahi Muhammad Kabir","Abdullahi Nafisa","Abdulmajeed-Ibrahim Raheema","Abdulrahman Ashraf Ahmed",
+            "Abdulrahman Tha'abit Onimisi","Abdulrasaq Hamidat","Abdulra'uf Muhizah","Abdulssalam Buhari Muhammad Bukhary","Abdulwakeel Mahfuz Olamilekan","Abdulwasiu Rabiah","Abel Iruoghene Unique","Abidemi Ainaodunayo Christabel","Abiodun Oladimeji Joshua","Abonyi Esther Onyinyechi",
+            "Abraham Favour Ugbede","Abraham Princess Alice","Abu Olamiposi Joseph","Abubakar Jibril Danjuma","Abutu Marvellous","Adam Khadijah Idris","Adams Favour","Adebanjo Daniel Anuoluwapo","Adebayo Dominion Ayomiposi","Adebayo Rejoice Oluwanifemi",
+            "Adeboyejo Stephen Inioluwa","Adefemi Olamide Stephen","Adegahi Favour","Adelodun Bashirat","Adenekan Abdulbasit Oluwaferanmi","Adewale Olamide Elizabeth","Adeyemi Timileyin Hammed","Adeyemi Victoria","Adeyemo Adedire Adebola","Adizua Edna Chisom",
+            "Afolabi Bukunmi Ebenezer","Afolayan Moses Seun","Agbim Chigozie Theresa","Agbo Blessing Chisom","Agbo Chinekwu Mabel","Agbo Emmanuella Ekondu","Agbor Peace Beatrice","Agum Isaac Tersen","Aguzuo Glory Chiamaka","Ahize Favour Chidubem",
+            "Ahmad Fatima Danfulani","Ahmad Hanifa","Ahmed Hauwa Gumel","Ahmed Khadijah Emike","Ahmed Zainab Gumel","Ahukanna Favour Chinasa","Aina Teniola Eunice","Aitanun Angel Omono","Aitanun Mercy Onyekachi","Aiyedogbon Oluwasemilore Onaopemiposi",
+            "Ajagor Royal Kosisochukwu","Ajah Chimere Marvellous","Ajalogun Azeezat Omotola","Ajibola Favour Goodness","Akala Wisdom Kamsiyochukwu","Akamitang David Unimk","Akan Miracle Emem","Akanama Ama","Akande Deborah Omolola","Akaneme Emmanuel Chukwunwike",
+            "Akarahu Winner Chimeremueze","Akinbobola Oluwatobiloba Isioma","Akindonyin Ayomide Victor","Akinfenwa Dolapo Janet","Akinola Ayomikun Eunice","Akintomide Bright Okikijesu","Akinyemi Rejoice Gold","Akinyosoye Ifedayo Samuel","Akowe Jesse","Akpan Abigail Onyinyechi",
+            "Akula Nater King","Akumba Angel Chinenye","Alaaye Isreal","Alabi Abdurroheem Ayodele","Alabi David Onimisi","Alabi Rebecca Ajibola","Alade Toib","Alao Mukhtar Adeniyi","Alaribe Adaeze Precious","Albert Anna Ojonele",
+            "Albert Ethan Edu","Alexander Uzoma","Ali Sheriffdeen","Aliyu Abdulrahman Doga","Aliyu Yasmin Muhammad","Amadu Peculiar","Aminu Fatima","Aminu Firdausi Oyiza","Aminu Hauwau","Aminu Joy Ojochegbe",
+            "Aminu Masuda","Amodu Mercy Ejimomi","Amos Anabel Pemosi","Anaele Onyedikachi Goodness","Anene Alexander Chukwuebuka","Ani Henry Eni","Anibe Grace Ibe","Anietie-Dan Lydia Mfoniso","Anoribe Precious Ugochi","Anthony Favour Chukwu",
+            "Anyaora Victory Chiemerie","Anyigor Cynthia Ifunanya","Anyonya Divine Efemena","Arastus Pwashikai","Aregbesola Kifayatullah Gbemisola","Arome Ojochide Deborah","Asadu Ezinne Faith","Asamu Al-Ameen Abolaji","Asekomhe Charity Avuedoya","Asogwa Favour Nnodebe",
+            "Attah Jesse Ugbede","Audu Christiana Ojoagefu","Augustine Clementina Omojo","Augustine Treasure Nmesomachukwu","Awoniyi Precious Eniola","Ayaun Msaan Joy","Ayinde Abdulsamad","Ayinmode Blessing Funmilayo","Ayodele Oluwafisayo Joseph","Ayodele Oluwaseun Victoria",
+            "Ayoola Oyindamola Precious","Baba Angela","Babatunde Omofolahan Emmanuel","Babawale Mary Adebukola","Bakenna Ayuba Olamilekan","Bako Happiness Arwashi","Bamisile Blessing Temitope","Bariakpoa Ernest Legbosi","Bari-Nyana Andre Kwesi",
+            "Bashir Abdulsobur","Bashir Asiya Shagari","Basil Favour Ngozi","Bello Mustapha Tata","Bello Nafisat Ayinke","Bello Thara Ize","Bello Zafira Ozozahuwa","Benjamin Osemudiamhen","Benneth Tochukwu David","Ben-Ukanwoke Onyinyechi Chimdindu",
+            "Berebon David Chiemere","Biko Mary","Bishop Rejoice Adaobi","Bishop Rihanna Kamsi","Bitrus Amirgumninah Angela","Bitrus Treasure Kyangchat","Bolaji Boluwatife Daniel","Cassidy Destiny Himnom","Chiaka Glorious Ozioma","Chibiko Testimony Oluoma",
+            "Chibuogwu Racheal Nmesoma","Chibuzo Marvelous Chimeremeze","Chibuzor Great Chidiebube","Chibuzor Miracle Chidiebere","Chidi Majesty Chinaecherim","Chidi Rejoice Chinememma","Chidiadi Collins Chinonso","Chikaodiri Chinenye Peace","Chima Amanda Nwadinma","Chime Goodluck David",
+            "Chinabu Chinemerem Clinton","Chinanuife Ruth Chioma","Chinedu Chinedu Christian","Chinedu Chisom Chinagorom","Chinedu Destiny Akachukwu","Chinedu Marvelous Chinaza","Chinonso Chidera Benedicta","Chirah Chioma Precious","Chollom Ruth Dalyop","Chukwu Emmanuel Chidindu",
+            "Chukwu Emmanuella Chinwendu","Chukwu Victoria Daberechi","Chukwuani Dominic Chinomso","Chukwubueze Chukwuemeka Innocent","Chukwudi David Ekpereka","Chukwuemeka Gift Uchenna","Chukwuemeke Samuel","Chukwuezi Daniel Ebuka","Chukwuikpe Chinecherem Emmanuella","Chukwuneke Divine Ogechukwu",
+            "Chukwuneme Precious Amarachi","Clement Chiziterem Glory","Clement Goodness Tosin","Dagunduru Faith Ayomide","Damian Faith Chinaza","Daniel Catherine Ochuole","Daniel Grant","Daniel Miracle Otse","Daniel Peace Tishino","Daniel Salome",
+            "Danladi Endurance Musa","David Meshack Ayemele","Dawang Lovelyn Diedoem","Dennis Blessed Aniefiok","Dibuah Isaac Sochukwuezue","Duru Chinaza Emmanuella","Duru-Mbachu Pamela Ugochi","Ebirim Amarachukwu Daniella","Ebirim Onyinyeoma Emmanuella","Edegbo Happiness Olubojo",
+            "Edibo Famous Ojotule","Edward Okibeh","Efada Joseph Oineh","Effiong Deborah Alfred","Eguma Christopher Iyi-Owo","Ehiguese Junior Ebhose","Ehinmidu Damilola","Ehizojie Elizabeth Ono","Ejeh Perpetual Peace","Ejiogu Luke Munachimso",
+            "Ekeh Amarachi Stephanie","Ekeh Mallachy Chibuike","Ekesiani Gift Chinecherem","Ekeson Prince Akachukwu","Ekwok Blessing","Ekwugwum Ogochukwu Mercy","Elebachi-Uboh Michelle Uchechukwu","Eleke Deborah Oluebube","Elijah Niya","Elisha David Emeka",
+            "Emeka Christabel Chioma","Emeka Promise Ejiofor","Emele Esther Onyinyechi","Emelife Emmanuella Chidinma","Emem Ekemini","Emenike Rejioce Ozioma","Emmanuel Caleb Ikechukwu","Emmanuel Daniel Chimaobim","Emmanuel David Chijindu","Emmanuel Mercy Eseroghene",
+            "Emmanuel Monica Ogbene","Enawore David","Ende-Nathaniel Joan Tessa","Enikanoselu Daniel Bola","Enokela Godwin Ukwenya","Enwelu Nmachukwu Divine","Erameh Jennifer","Erhuvwu Fejiro David","Erondu Destiny Chinaza","Esumobi Grace Ifelunwa",
+            "Etoamaihe Mmesoma Marvelous","Etuk Mfoniso Miriam","Eze Favour Chisom","Eze Greatness Ihuoma","Eze Nmesoma Divine","Eze Peace","Eze Ujunwa Esther","Ezeagu Miracle Chinazaekpere","Ezekiel Ekemini Monday","Ezekiel Noble",
+            "Ezema Favour Ebube","Ezemma Harrison Chinecherem","Ezenwadi Chimaijem Cosmas","Ezeorizu Amarachukwu Vivian","Ezere Emmanuella Chinyereuba","Ezigbo Chisom Jennifer","Ezugwu Micheal Okechikwukere","Fagebo Esther Ifeoluwa","Fashe Abdulbasit","Femi David Ekhoia",
+            "Festus Dominion","Fidelis Clementina Annamay","Fidelis Esther Sopuruchukwu","Frank Iruoghene","Frank Kamsiyochukwu Esther","Funso Olamide Mercy","Gabriel Ifeoluwaposimi Moses","Gabriel Nanret Enoch","Gabriel Ojochogwu Joab","George Anthonia Emike",
+            "Godson Light Chidiebere","Godson Precious Oluwadamilola","Godspower Monica Rejoice","Godwin Avadoo Grace","Gold Damilola Prevailer","Gontur Hope Sarah","Habila Alheri Grace","Hamza Maryam Lawal","Haruna Alhassan","Haruna Glory",
+            "Haruna Nusaibat","Hassan Mary","Hassan Muhsinah Adeola","Hassan Yusuf Al-Amin","Hussain Asma'u Shazin","Hussaini Abdullahi Abdullahi","Ibe Chioma Favour","Ibeawuchi Daniella Chimuanya","Ibeawuchi Precious Chidinma","Ibrahim Aisha Bukar",
+            "Ibrahim Favour Rahanat","Ibrahim Hashim Bena","Ibrahim Kamaldeen Oluwaseun","Ibrahim Khalid","Ibrahim Muhammad Maahi","Ibrahim Nabiha Ene","Ibrahim Olamilekan Abdulganiu","Idoko Derrick Somtochukwu","Idris Ibrahim Noma","Idris Zainab Ize",
+            "Idris-Ismail Muadh Oladipupo","Ifeanyi Emmanuel Oghenefegiro","Ifeanyi Kosisochukwu","Ifeanyichukwu Daniel Kamsiyonna","Ifebuuche Emmanuel Dominion","Igbo Fidelis Uzochi","Igbokwe Ikechukwu Emmanuel","Ige Diekololaoluwa Dominion","Igiri Abigail","Igomu Elizabeth Egahjonyah",
+            "Igube Daberechi Rita","Igwe Bright Uchechi","Igwe Rejoice Ukamaka","Iheakanwa Jesse Osinachi","Ihezue Chidera Michelle Antoinette","Ikechi Chihurumnaya Wisdom","Ikechukwu Divine Anne","Ikenna Favour Adaeze","Ikpeni Emuobosa Gift","Ikwue Oche David",
+            "Iloh Michael Chukwunonso","Ilorah Chigozie Michael","Imafidon Prosper Pius","Innocent Blessing Udo","Ipigbhe Miracle Chinenye","Isa Isa Abdulwasiu","Isah Hauwa Jessica","Isah Khamarudeen Omeiza","Isah Lydia Omojo","Isah Maryam Kusherki",
+            "Isah Nazif","Isah Ummusalma Kusherki","Ishaq Fatima","Ishola Hafeezoh Omolola","Isiaka Mariam Ayomide","Isibor Jeremiah Esiomolomoh","Ismail Hannatu Omolola","Ismail Solihat Aderemi","Ismaila Aliyu","Israel Chiemerie Joan",
+            "Isreal Miracle Nyong","Iwomi Somtose Benedict","Iwu Eucharia Onyekachi","Iyama Bright Chimagbawe","Iyen Flourish Eloghosa","Iyke Kenneth Chukwuka","Izonfade Luckyere Mabel","Jacob Amos Olayinka","James Blessing Miracle","James Miracle Ogirima",
+            "Jayeola Jomiloju Abigail","Jerome David Ojone","Jimoh Odunayo Ayomide","John Chidinma Mary","John Chinyere Helen","John Comfort Apeh","John David","John Goodnews Oyiza","John Perfect Orifan","Joseph Deborah Ugochukwu",
+            "Joshua Favour Erovre","Josiah Zipporah Salasi","Kabir Abdullahi Azzam","Kadiri Deborah Moyinoluwa","Kalu Chidinma","Kayode Ayomide Henry","Kelechi Joseph Wisdom","Kelechukwu Nancy Chiamaka","Kenneth Ifeoluwa Daniel","Kenneth Queen Onyinyechukwu",
+            "Kenneth Victory Chibuike","Kolawole Success Temiloluwa","Kyana Basil Ahamed","Laoke Folasade Christiana","Lawal Hauwa'u Amama","Lawal Raihan Yakubu","Lawal Sofia Ifeoluwa","Lawrence Destiny Ogebe","Lawrence Vivian Ojochenemi","Liberty Khadijah",
+            "Linus Cherish Ezinwa","Lucky Favour","Lucky Gift Chidimma","Lukman Opeyemi Nominat","Macanthony Sonma Sheila","Madagwa Oghene Kparobor Famous","Madumere Angel Chiamaka","Mahmud Raheemah Jafaru","Malachi Victor Solumtochukwu","Malachy John Oluebube",
+            "Malacky King Nsikabasi","Mathew Chigozie Favour","Mathias Josiah Joseph","Matthew Anna","Matthew Gloria Ojochegbe","Matthew Happiness Ayinda","Mbamara Amarachukwu Callista","Mbelobi Praise Kelechi","Memoye Isephemugh Daniella","Mene Franca Mabamije",
+            "Menkiti Ebube Cynthia","Mgbodile Jennifer Makuochukwu","Micah Triumph Shanyet Eshiomughamhe","Michael Mary Godiya","Micheal Favour Ubong","Mmuoneke Patrick Chibuike","Mohammed Ladidi Aisha","Mohammed Ruth Kudirat","Mojeed Hairat Tolani","Monday Prosper Divine",
+            "Moses Etombi Victoria Seun","Mudi Blessing","Muhammad Abdullahi","Muhammad Abdulmalik Sadiq","Muhammad Abdulmumin Bawada","Muhammad Abubakar Badaru","Muhammad Alamin Muhammad","Muhammad Awwal Musa","Muhammad Jamiu Ibrahim","Muhammad Nasiru",
+            "Muhammadulhadi Abdulsalam Yara","Muhammed Aisha","Muhammed Fatima Zara","Muhammed Mubina","Muhammed Rukayat","Muritala Hajarat Idowu","Musa Fulerah Ummee","Musa Goodluck Abraham","Musa Habiba","Musa Mitchele Etsonsire",
+            "Mustapha Hauwa Arafah","Mustapha Muhammad Abdulsalam","Mustapha Muhammad Al-Ameen Usman","Mustapha Nafisat Olawumi","Nasiru Faiza Onize","Nathaniel Amarachi Marvellous","Ndochukwu Chinenye Esther","Ndubueze Emmanuel Akachukwu","Ndubuisi Chikamso Joy","Ndubuisi Victor Chisom",
+            "Ndukwu Assumpta Gifechukwu","Ngbede Samuel Munachiso","Nku Miracle","Nkwocha Chikamso Victory","Nnakwe Maryann Ifeyinwa","Nnamani Blessing Odinakachukwu","Nnamani Daniel Uchechukwu","Nnamdi Oluchi Happiness","Nwachukwu Praise Chimemeriwo","Nwafor Charles Chinweike",
+            "Nwando Bright Chiagozelam","Nwaogu Amarachi","Nwodom Chidara Blessing","Nyam Agnes Bella","Oba Cherish","Obadiah Veronica Miabdong","Obansa Muhammed","Obasohan Dominion Osaze","Obasuyi Peniel Nosarieme","Obetta Ozioma Light",
+            "Obeya Ochidoma Dominic-Juniour","Obi Chiedozie Chidi","Obi Nancy Barong","Obiefuna Marycynthia Ogochukwu","Obikobe Chioma Emmanuella","Obilor Judith Ifeoma","Obinna Miracle","Obinna Perfect","Odii Catherine Munachimso","Odike Simon Ojonugwa",
+            "Odoh Michael Chijindu","Odomba Sabdat Ize","Odubiyi Fawaz Daniel","Oduntan Babatunde Kameel","Odutolu Victor Iyanuoluwa","Ofoegbu Goodluck Michael","Ogah Success Omagu","Ogar Regina Ekwork","Ogbode Goodnews","Ogbogo Thankgod Onah",
+            "Ogbole David Goodluck","Ogbonna Chidiebere Mary","Ogbonna Ikechukwu Favour","Ogbuagu Mercy","Ogbuefi Chima Michael","Ogenyi Favour Eneh","Ogenyi Patricia Somtochukwu","Ogo Michael Oche","Ogungbe Deborah Eniola","Ogunmokun Cherish Adeyemi",
+            "Ogunmola Francis Jomiloju","Ogwuche Augustine Miracle","Ogwurumba Oluomachi Sonia","Ohakwe Favour","Ohikere Abdulbasit Adavize","Oibochie Emmanuel Abaseta","Ojonugwa Eleojo Ireoluwa","Okafor Chiemelie Mary","Okechukwu Felix","Okechukwu Kingsley Nzube",
+            "Okechukwu Miracle Nzubechi","Okeke Tovia Ogechukwu","Okeowo Omowunmi Sarah","Okere Naomi Chioma","Okeyede Ahmed Ayomide","Okezue Miracle Chimfurumnanya","Okoli Chikanyima Daniel Chinweuba","Okoli Chinemerem David Orisaemeka","Okoli Evandonald Ekenedilichukwu","Okolo Chiamaka Miracle",
+            "Okolo Chikamso Mary-Princess","Okono Sochukwukaima Martin","Okori Blessed Clement","Okoro Kingdavid Onyiekachi","Okoro Luke Chukwuma","Okoromi Osasele Peace","Okoye Onyinyechi Dawnqueen","Okpara Chidimma Meekness","Okpe Mercy","Okuepusu Rebecca Hunuwa",
+            "Okunade Adejoke Nafisat","Okusanya Halimat Opemipo","Okwori Jennifer Chinecherem","Olabisi Precious Eniola","Oladele Mustapha Korede","Oladoyinbo Emmanuel Oluseun","Olalere Dominion Oluwatoyin","Olanipekum David Oluwanifemi","Olanipekun Daniel Kayode","Olaojo Elizabeth Oluwanifemi",
+            "Olarewaju Ayomide Oreoluwa","Olatunde Mercy Moses","Olawale Benedicta Ebunlomo","Oleru Gabriel Nnameaka","Olorunlomola Oladapo Blessed","Oloruntoba Success","Olugbe Obed Olamilekan","Olusegun Esther Oluwadunsi","Olushola Tobiloba Marvellous","Oluwaseyi Moyin Helen",
+            "Omeke Chekwube Emmanuella","Omori Favour Omori","Omorogie Samuel A","Omorogieva Bliss Nosazena Ifunaya","Omotayo Precious Oreoluwa","Omotayo Sheyi Wisdom","Omowumi Emmanuel Nifemi","Onaji Prosper Ameh","Onalu Chiamaka Elizabeth","Oni Michael Olaniyi",
+            "Onowuh Chidiebube Akpuh Micheal","Onuche Godswill Unekwuojo","Onuh Ugbala Jane","Onyeanu Benedict Chidiebube","Onyebuchi Abigail Udochukwu","Onyebuchi Glory Ebubechi","Onyebuchi Jennifer Onyinyechukwu","Onyemaechi Chigozirim Janny","Onyishi Judith Febechukwu","Onyishi Nneoma Ada",
+            "Oparinde Johnson Anuoluwapo","Orafu Emmanuel Chimzaram","Oritsetimeyin Eyituoyo Wisdom","Orji Jecinta Chiziterem","Orji Timothy Egwuzoronmachi","Osaigbovo Itohan Faith","Osarenkhoe Nosa Divine","Osigbeme Jeffrey Oshoke","Osigwe Ifeanyi Michael","Osimen Favour Osebhagiajeme",
+            "Osukwu Faith Ihuoma","Otigba Ngozi Favour","Otsonu Grace Ene","Otu Divine Muji","Otuyemi Oyinkansola Faith","Owusu Isaac Ansah","Oyeleke Oluwatosin Patience","Oyetakin Joseph","Oyetokun Olatunji Emmanuel","Oyewole David Olamiposi",
+            "Oyeyemi Oluwafisayomi Omotade","Ozioko Emmanuel Chidera","Oziri Chukwubuike Michael","Paul Oyiza Rebecca","Peter Favour","Peter Miracle Nmerichukwu","Peterson Daniel","Philip Gideon Chukwuemeka","Polycarp Blessing Bassey","Rahmatu Umar",
+            "Rasheed Aliyah Adewunmi","Rotimi Joshua Olatunji","Royal Onyebuchi Ewomazino","Sadiq Hafsat Ometere","Saibu Kayode Tunde","Saidu Anas Ahmad","Salami Anjola Oluwa Bashirat","Salihu Abdullahi Kabir","Sam Daniel Monokpo","Sampson Kelechi Victory",
+            "Samson Ayobami Victory","Samson Bright Chibueze","Samson Michael Kolo","Samuel Divine Oluwakemi","Samuel Favour Okon","Samuel Mercy Chidera","Samuel Oluwaseyi Isaac","Samuel Udo Miracle Uchanma","Sani Sa'adatu Ja'afaru","Shaibu Fatima Oyiza",
+            "Shaibu Peace Ojomugbokenyode","Shefiu-Badmos Zainab Motunrayo","Shehu Ibrahim Utono","Shehu Maryam Alake","Shodolamu Bilikisu Ajoke","Showunmi Tolulope Prisca","Shuaibu Jibril","Sigah Shalom","Silas Plangnan Dakup","Simeon Rita Ojone",
+            "Siyaka Husseina Oyiza","Solomon Judith","Stanley Deborah Elohozino","Stephen Divine Chisom","Stephen Ofure Laurena","Suleiman Khadijat Habibu","Sunday David Oloche","Sunday Divine Ugbedeojo","Sunday Emmanuel","Sunday Favour Boluwatife",
+            "Sunday Joy","Sunday Selina","Sunusi Fatima Muhammad","Surajudeen Abdulbaqi Gbolahan","Tahiru Firdausi Ojimaojo","Taiwo Princess Elizabeth","Taiwo Samuel Ayomiposy","Taofiq Abubakar-Sadiq Akanbi","Tego Esther Inemesit","Teslim Jemilat Bolanle",
+            "Thompson Treasure Isioma","Tiamiyu Fawziyyah Omotayo","Tolorunloba Victory Nifemi","Toni-Nnamani Nneoma Frances","Uaifo Gabriel Aidolojie","Uche Chidimma Mercy","Uchenna Ephraim Kwenyerechukwu","Udekwe Daniel Okeanyichukwu","Uduehi Gabriel Ohiole","Ufot Edidiong Akpankan",
+            "Ufuoma Deborah Eseoghene","Ugochukwu Chidera Emmanuel","Ugochukwu Christiana Anulika","Ugochukwu Elijah Praise","Ugwoke Chisom Blessing","Ugwu Dikachi Emmanuel","Ugwu Jennifer Chukwuemerie","Ugwu Onyinyechukwu Lucy","Ugwuanyi Love Ngozi","Ugwueze Chioma Gift",
+            "Uhalla Favour Francisca","Ukeje Mercy Ezinne","Umar Halima Faruk","Umar Yusuf Faruk","Umaru Gift Eleojo","Umeh Victory Chidiebube","Urum Samuel Udochukwu","Ushie Victor Chigozie","Usman Abdullahi Baba","Usman Fatimatu Zaharau",
+            "Usman Suraiya","Uthman Muhammad Maidala","Uwai Daniel","Uyanwanne Nnamdi Benedict","Uyoo Mary Myom","Uzodiagu Precious Chidera","Uzodimma Favour Adachukwu","Uzoma Obiajulu Favour Joshua","Uzowulu Lucky Tochukwu","Victor Chukwunyere Victor",
+            "Vongfa Nanhan Holiness","Williams Miracle Osamone","Yahaya Khadijat Ekkan","Yahaya Ummulhaq Salihu","Yakubu Aliyu Yakubu","Yakubu Julde Jabir","Yanmelu Hembafan Perpetual","Young Praisegod Ezionyinye","Yunana Jummai Lukpo","Yusuf Korede",
+            "Yusuf Nafisat","Yusuf Shalom Praise","Yusuf Yusuf Namallam","Zubair Mukhtaar Olashubomi"
+        ];
+
+        let studentsDatabase = [];
+        let filteredStudents = [];
+        let currentPage = 1;
+        const pageSize = 20;
+        let activeStudent = null;
+        let activeSnapperIndex = 0;
+        let mediaStream = null;
+        let isAdminLoggedIn = false;
+
+        let idb = null;
+        function initIndexedDB() {
+            return new Promise((resolve) => {
+                try {
+                    const req = indexedDB.open("GSSKubwaYearbookDB", 10);
+                    req.onupgradeneeded = (e) => {
+                        const db = e.target.result;
+                        if (!db.objectStoreNames.contains("students")) db.createObjectStore("students", { keyPath: "candidateCode" });
+                    };
+                    req.onsuccess = (e) => {
+                        idb = e.target.result;
+                        loadLocalDataFromIDB().then(resolve);
+                    };
+                    req.onerror = () => resolve();
+                } catch(err) { resolve(); }
+            });
+        }
+
+        async function loadLocalDataFromIDB() {
+            if (!idb) return;
+            try {
+                const tx = idb.transaction(["students"], "readonly");
+                tx.objectStore("students").getAll().onsuccess = (e) => {
+                    (e.target.result || []).forEach(item => {
+                        const s = studentsDatabase.find(st => st.candidateCode === item.candidateCode);
+                        if (s && item.photo) {
+                            s.photo = item.photo;
+                            if (item.quote) s.quote = item.quote;
+                        }
+                    });
+                };
+            } catch(e) {}
+        }
+
+        function saveLocalStudentToIDB(student) {
+            if (!idb) return;
+            try {
+                const tx = idb.transaction(["students"], "readwrite");
+                tx.objectStore("students").put({
+                    candidateCode: student.candidateCode,
+                    photo: student.photo,
+                    quote: student.quote,
+                    hobbies: student.hobbies
+                });
+            } catch(e) {}
+        }
+
+        function formatHiddenYearDOB(dobStr) {
+            if (!dobStr) return "";
+            const parts = dobStr.split('-');
+            return parts.length === 3 ? `${parts[1]} ${parts[2]}` : dobStr;
+        }
+
+        function getStableAvatar(sNo, isFemale) {
+            const maleAvatars = [
+                'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=400',
+                'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400'
+            ];
+            const femaleAvatars = [
+                'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400',
+                'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=400'
+            ];
+            return (isFemale ? femaleAvatars : maleAvatars)[sNo % 2];
+        }
+
+        function initStudentsData() {
+            const explicitMap = new Map();
+            RAW_STUDENT_DATA.forEach(item => {
+                explicitMap.set(item[0], {
+                    sNo: item[0],
+                    candidateCode: `CAN-2026-${String(item[0]).padStart(3, '0')}`,
+                    examNo: item[1],
+                    name: item[2],
+                    gender: item[3],
+                    dobRaw: item[4],
+                    dobDisplay: formatHiddenYearDOB(item[4]),
+                    photo: null,
+                    defaultPhoto: getStableAvatar(item[0], item[3] === 'Female'),
+                    quote: DEFAULT_MOTTOES[item[0] % DEFAULT_MOTTOES.length],
+                    hobbies: DEFAULT_HOBBIES[item[0] % DEFAULT_HOBBIES.length]
+                });
+            });
+
+            const result = [];
+            for (let i = 1; i <= 714; i++) {
+                if (explicitMap.has(i)) {
+                    result.push(explicitMap.get(i));
+                } else {
+                    const examCode = (4020204000 + i).toString();
+                    const name = FULL_NAMES_LIST[i - 1] || `Candidate Name ${i}`;
+                    const isFemale = name.includes("Precious") || name.includes("Glory") || name.includes("Aeesha") || name.includes("Blessing") || name.includes("Grace") || name.includes("Esther") || (i % 2 === 0);
+                    const rawDob = `2010-Mar-${(i % 28) + 1}`;
+                    
+                    result.push({
+                        sNo: i,
+                        candidateCode: `CAN-2026-${String(i).padStart(3, '0')}`,
+                        examNo: examCode,
+                        name: name,
+                        gender: isFemale ? "Female" : "Male",
+                        dobRaw: rawDob,
+                        dobDisplay: formatHiddenYearDOB(rawDob),
+                        photo: null,
+                        defaultPhoto: getStableAvatar(i, isFemale),
+                        quote: DEFAULT_MOTTOES[i % DEFAULT_MOTTOES.length],
+                        hobbies: DEFAULT_HOBBIES[i % DEFAULT_HOBBIES.length]
+                    });
+                }
+            }
+            return result;
+        }
+
+        window.onload = async function() {
+            studentsDatabase = initStudentsData();
+            filteredStudents = [...studentsDatabase];
+            await initIndexedDB();
+            populateSnapperDropdown();
+            navigateTo('gallery');
+        };
+
+        function setDisplay(id, val) {
+            const el = document.getElementById(id);
+            if (el) el.style.display = val;
+        }
+
+        function navigateTo(viewName) {
+            ['view-gallery', 'view-snapper', 'view-admin-login', 'view-admin-dashboard'].forEach(id => setDisplay(id, 'none'));
+
+            if (viewName === 'gallery') {
+                setDisplay('view-gallery', 'block');
+                renderGallery();
+            } else if (viewName === 'snapper') {
+                setDisplay('view-snapper', 'block');
+                updateSnapperUI();
+            } else if (viewName === 'admin-login') {
+                if (isAdminLoggedIn) {
+                    setDisplay('view-admin-dashboard', 'block');
+                } else {
+                    setDisplay('view-admin-login', 'block');
+                }
+            }
+        }
+
+        function renderGallery() {
+            const grid = document.getElementById('students-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const total = filteredStudents.length;
+            document.getElementById('student-count-badge').innerText = total;
+
+            const totalPages = Math.ceil(total / pageSize) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            document.getElementById('page-indicator').innerText = `Page ${currentPage} of ${totalPages}`;
+            document.getElementById('prev-page-btn').disabled = currentPage === 1;
+            document.getElementById('next-page-btn').disabled = currentPage === totalPages;
+
+            const startIdx = (currentPage - 1) * pageSize;
+            const pageItems = filteredStudents.slice(startIdx, startIdx + pageSize);
+
+            pageItems.forEach(student => {
+                const photoSrc = student.photo || student.defaultPhoto;
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm flex flex-col justify-between group cursor-pointer";
+                card.onclick = () => openStudentModal(student.candidateCode);
+
+                card.innerHTML = `
+                    <div>
+                        <div class="relative aspect-[4/5] sm:h-44 bg-slate-100 overflow-hidden">
+                            <img src="${photoSrc}" alt="${student.name}" class="w-full h-full object-cover">
+                            <div class="absolute top-1.5 left-1.5">
+                                <span class="bg-brand-900/90 text-amber-300 text-[9px] font-black px-1.5 py-0.5 rounded shadow">
+                                    #${student.sNo}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-2 space-y-0.5">
+                            <h3 class="font-serif font-bold text-slate-900 text-xs leading-tight line-clamp-1">${student.name}</h3>
+                            <p class="text-[9px] text-slate-500 italic line-clamp-1">"${student.quote}"</p>
+                        </div>
+                    </div>
+                    <div class="px-2 py-1.5 bg-slate-50 border-t border-slate-100 flex justify-between text-[9px] font-bold text-brand-700">
+                        <span>View Profile</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterStudents() {
+            const query = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
+            const gender = document.getElementById('gender-filter')?.value || 'all';
+
+            filteredStudents = studentsDatabase.filter(student => {
+                const matchesName = student.name.toLowerCase().includes(query) || student.sNo.toString() === query || student.candidateCode.toLowerCase().includes(query);
+                const matchesGender = gender === 'all' || student.gender === gender;
+                return matchesName && matchesGender;
+            });
+
+            currentPage = 1;
+            renderGallery();
+        }
+
+        function changePage(delta) {
+            currentPage += delta;
+            renderGallery();
+            window.scrollTo({ top: 150, behavior: 'smooth' });
+        }
+
+        function openStudentModal(candidateCode) {
+            const student = studentsDatabase.find(s => s.candidateCode === candidateCode);
+            if (!student) return;
+            activeStudent = student;
+
+            document.getElementById('modal-student-img').src = student.photo || student.defaultPhoto;
+            document.getElementById('modal-student-name').innerText = student.name;
+            document.getElementById('modal-candidate-badge').innerText = `#${student.sNo}`;
+            document.getElementById('modal-student-meta').innerText = `${student.gender} • Birthday: ${student.dobDisplay}`;
+            document.getElementById('modal-quote').innerText = `"${student.quote}"`;
+            document.getElementById('modal-hobbies').innerText = student.hobbies || "Not specified";
+
+            setDisplay('profile-modal', 'flex');
+        }
+
+        function closeModal() {
+            setDisplay('profile-modal', 'none');
+            activeStudent = null;
+        }
+
+        // QUICK SNAPPER LOGIC
+        function populateSnapperDropdown() {
+            const select = document.getElementById('snapper-student-select');
+            if (!select) return;
+            select.innerHTML = '';
+            studentsDatabase.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.sNo;
+                opt.text = `#${s.sNo} - ${s.name} (${s.gender})`;
+                select.appendChild(opt);
+            });
+        }
+
+        function updateSnapperUI() {
+            const student = studentsDatabase[activeSnapperIndex];
+            if (!student) return;
+
+            const select = document.getElementById('snapper-student-select');
+            if (select) select.value = student.sNo;
+
+            document.getElementById('snapper-current-img').src = student.photo || student.defaultPhoto;
+            document.getElementById('snapper-current-code').innerText = `#${student.sNo} (${student.candidateCode})`;
+            document.getElementById('snapper-current-name').innerText = student.name;
+            
+            const statusEl = document.getElementById('snapper-current-status');
+            if (student.photo) {
+                statusEl.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Photo Saved Successfully!`;
+                statusEl.className = "text-[10px] text-emerald-700 font-bold mt-0.5";
+            } else {
+                statusEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-500 mr-1"></i> Awaiting Photo Capture`;
+                statusEl.className = "text-[10px] text-amber-700 font-bold mt-0.5";
+            }
+        }
+
+        function onSnapperStudentSelected() {
+            const select = document.getElementById('snapper-student-select');
+            if (!select) return;
+            const sNo = parseInt(select.value, 10);
+            const index = studentsDatabase.findIndex(s => s.sNo === sNo);
+            if (index !== -1) {
+                activeSnapperIndex = index;
+                updateSnapperUI();
+            }
+        }
+
+        function jumpSnapper(delta) {
+            activeSnapperIndex += delta;
+            if (activeSnapperIndex < 0) activeSnapperIndex = studentsDatabase.length - 1;
+            if (activeSnapperIndex >= studentsDatabase.length) activeSnapperIndex = 0;
+            updateSnapperUI();
+        }
+
+        async function startCameraStream() {
+            try {
+                mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false });
+                const videoEl = document.getElementById('camera-video');
+                videoEl.srcObject = mediaStream;
+                document.getElementById('camera-placeholder').style.display = 'none';
+            } catch (err) {
+                alert("Could not start camera. You can use 'Or Upload File Instead' right below!");
+            }
+        }
+
+        function capturePhotoFromStream() {
+            const videoEl = document.getElementById('camera-video');
+            const canvas = document.getElementById('camera-canvas');
+            if (!mediaStream || videoEl.paused || videoEl.ended) {
+                alert("Please start the camera first or use file upload.");
+                return;
+            }
+
+            canvas.width = videoEl.videoWidth || 640;
+            canvas.height = videoEl.videoHeight || 480;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+            
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+            saveSnappedPhotoToCurrentStudent(dataUrl);
+        }
+
+        function handleSnapperFileFallback(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                saveSnappedPhotoToCurrentStudent(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveSnappedPhotoToCurrentStudent(dataUrl) {
+            const student = studentsDatabase[activeSnapperIndex];
+            if (!student) return;
+
+            student.photo = dataUrl;
+            saveLocalStudentToIDB(student);
+            updateSnapperUI();
+
+            // Automatically advance to the next student for ultra-fast snapping!
+            setTimeout(() => {
+                jumpSnapper(1);
+            }, 300);
+        }
+
+        // Bulk Uploader & Admin
+        function loginAdmin() {
+            const pass = document.getElementById('admin-passcode-input').value.trim();
+            const errDiv = document.getElementById('admin-login-error');
+
+            if (pass === 'admin2026') {
+                isAdminLoggedIn = true;
+                setDisplay('admin-login-error', 'none');
+                navigateTo('admin-login');
+            } else {
+                errDiv.innerText = "Invalid Passcode! Passcode is admin2026";
+                setDisplay('admin-login-error', 'block');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            navigateTo('gallery');
+        }
+
+        function processBulkPhotosUpload(event) {
+            const files = event.target.files;
+            if (!files || files.length === 0) return;
+
+            let matchedCount = 0;
+            let processed = 0;
+
+            Array.from(files).forEach(file => {
+                const match = file.name.match(/(\d+)/);
+                if (match) {
+                    const sNo = parseInt(match[1], 10);
+                    const student = studentsDatabase.find(s => s.sNo === sNo);
+
+                    if (student) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            student.photo = e.target.result;
+                            saveLocalStudentToIDB(student);
+                            matchedCount++;
+                            processed++;
+                            document.getElementById('bulk-count-matched').innerText = matchedCount;
+                            if (processed === files.length) {
+                                alert(`Successfully auto-matched and saved ${matchedCount} photos!`);
+                                renderGallery();
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                        return;
+                    }
+                }
+                processed++;
+            });
+        }
+
+        function exportYearbookDatabaseJSON() {
+            const exportData = studentsDatabase.filter(s => s.photo !== null).map(s => ({
+                candidateCode: s.candidateCode,
+                photo: s.photo,
+                quote: s.quote,
+                hobbies: s.hobbies
+            }));
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData));
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", `GSS_Kubwa_Photos_Backup_${new Date().toISOString().slice(0,10)}.json`);
+            dlAnchorElem.click();
+        }
+
+        function importYearbookDatabaseJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    let count = 0;
+                    
+                    importedData.forEach(importedItem => {
+                        const localStudent = studentsDatabase.find(s => s.candidateCode === importedItem.candidateCode);
+                        if (localStudent && importedItem.photo) {
+                            localStudent.photo = importedItem.photo;
+                            if (importedItem.quote) localStudent.quote = importedItem.quote;
+                            if (importedItem.hobbies) localStudent.hobbies = importedItem.hobbies;
+                            saveLocalStudentToIDB(localStudent);
+                            count++;
+                        }
+                    });
+                    
+                    alert(`Successfully imported and merged ${count} candidate photos!`);
+                    renderGallery();
+                } catch(err) {
+                    alert("Invalid Backup File format.");
+                }
+            };
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+</html>
         }
     </script>
     <style>
