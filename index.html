@@ -1,40 +1,309 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pre-Name Photo Capture</title>
-  <style>
-    body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px; }
-    video, canvas { width: 100%; max-width: 400px; border-radius: 8px; background: #222; }
-    input, button { padding: 10px 16px; font-size: 16px; width: 100%; max-width: 400px; box-sizing: border-box; }
-    button { background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GridSnap 9 Studio - 3x3 Grid Photo Snapper & Auto-Cropper</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- JSZip for Downloading 9 Cropped Photos in Zip -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#022c22',
+                            gold: '#f59e0b',
+                            dark: '#0f172a'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html, body {
+            overflow-x: hidden !important;
+            width: 100% !important;
+            margin: 0;
+            padding: 0;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #1e293b; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        
+        .grid-cell-hover {
+            transition: all 0.2s ease-in-out;
+        }
+        .grid-cell-hover:hover {
+            border-color: #f59e0b;
+            transform: scale(1.01);
+        }
+
+        /* Interactive Canvas Crop Handle styles */
+        .crop-handle {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: #f59e0b;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            z-index: 20;
+            box-shadow: 0 0 8px rgba(0,0,0,0.5);
+        }
+    </style>
 </head>
-<body>
+<body class="font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-slate-900">
 
-  <h2>Snap & Named Download</h2>
-  <input type="text" id="fileName" placeholder="Enter photo name here..." />
-  <video id="video" autoplay playsinline></video>
-  <button id="snap">Snap & Download</button>
-  <canvas id="canvas" style="display:none;"></canvas>
+    <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40 px-3 sm:px-6 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('scanner')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-emerald-500 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg">
+                    <i class="fa-solid fa-border-all"></i>
+                </div>
+                <div>
+                    <h1 class="font-black text-base sm:text-lg tracking-tight bg-gradient-to-r from-amber-400 via-emerald-300 to-white bg-clip-text text-transparent">
+                        GridSnap <span class="text-amber-400">9</span> Studio
+                    </h1>
+                    <p class="text-[10px] text-slate-400 font-semibold tracking-wide uppercase">3x3 Photo Snapper & Auto-Cropper</p>
+                </div>
+            </div>
 
-  <script>
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const snapBtn = document.getElementById('snap');
-    const fileNameInput = document.getElementById('fileName');
+            <!-- View Switcher -->
+            <nav class="flex items-center space-x-1 sm:space-x-2 bg-slate-800/80 p-1 rounded-xl border border-slate-700/60">
+                <button id="tab-btn-scanner" onclick="switchTab('scanner')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1.5 bg-amber-500 text-slate-950 shadow">
+                    <i class="fa-solid fa-[#000] fa-crop-simple"></i>
+                    <span class="hidden sm:inline">1. Sheet Scanner & 9-Crop</span>
+                    <span class="sm:hidden">9-Crop</span>
+                </button>
+                <button id="tab-btn-livegrid" onclick="switchTab('livegrid')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1.5 text-slate-300 hover:text-white">
+                    <i class="fa-solid fa-camera"></i>
+                    <span class="hidden sm:inline">2. Snap 9 Live Grid</span>
+                    <span class="sm:hidden">Live 9</span>
+                </button>
+                <button id="tab-btn-gallery" onclick="switchTab('gallery')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1.5 text-slate-300 hover:text-white relative">
+                    <i class="fa-solid fa-images"></i>
+                    <span class="hidden sm:inline">3. Extracted Photos</span>
+                    <span class="sm:hidden">Gallery</span>
+                    <span id="gallery-count-badge" class="ml-1 bg-emerald-500 text-slate-950 text-[10px] px-1.5 py-0.2 rounded-full font-black">0</span>
+                </button>
+            </nav>
+        </div>
+    </header>
 
-    // Access Camera
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-      .then(stream => { video.srcObject = stream; })
-      .catch(err => alert("Camera access denied or not supported."));
+    <!-- Global Toast Notification Banner -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
-    // Snap & Download
-    snapBtn.addEventListener('click', () => {
-      const name = fileNameInput.value.trim() || 'captured_photo';
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl w-full mx-auto px-3 sm:px-6 py-4 flex-grow">
+
+        <!-- ================= MODE 1: SHEET SCANNER & 9-CROPPER ================= -->
+        <section id="view-scanner" class="space-y-4">
+            <!-- Banner instructions -->
+            <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-brand-900 border border-slate-700 rounded-2xl p-4 sm:p-5 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <div class="flex items-center space-x-2">
+                        <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">Sheet Cropper Mode</span>
+                        <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase">Instant 9-Split</span>
+                    </div>
+                    <h2 class="text-lg sm:text-2xl font-black text-white">Snap or Upload a 9-Photo Sheet & Crop All 9</h2>
+                    <p class="text-xs text-slate-300 max-w-2xl leading-relaxed">
+                        Have a page with 9 passport pictures printed on it? Snap a clear photo or upload it below. Position the 3x3 matrix alignment guide over the photos, then click <b>"Extract All 9 Photos"</b> to crop them instantly into perfect individual images!
+                    </p>
+                </div>
+                
+                <div class="flex items-center gap-2 w-full md:w-auto">
+                    <button onclick="triggerCameraInput('scanner-file-input')" class="flex-1 md:flex-initial bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-4 py-2.5 rounded-xl text-xs shadow-lg transition flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-camera text-base"></i>
+                        <span>Snap Sheet Photo</span>
+                    </button>
+                    <label class="flex-1 md:flex-initial bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-bold px-4 py-2.5 rounded-xl text-xs cursor-pointer shadow transition flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-file-arrow-up text-amber-400 text-base"></i>
+                        <span>Upload File</span>
+                        <input type="file" id="scanner-file-input" accept="image/*" onchange="loadSheetImage(event)" class="hidden">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Main Scanner Canvas & Adjustment Panel -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                
+                <!-- Left: Interactive Canvas Editor -->
+                <div class="lg:col-span-8 bg-slate-900 rounded-2xl border border-slate-800 p-3 sm:p-4 shadow-xl flex flex-col space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <span class="text-xs font-bold text-slate-300 flex items-center">
+                            <i class="fa-solid fa-expand text-amber-400 mr-2"></i> 3x3 Sheet Matrix Alignment Canvas
+                        </span>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="resetGridPosition()" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700 transition">
+                                <i class="fa-solid fa-rotate-left mr-1"></i> Reset Grid
+                            </button>
+                            <button onclick="toggleGridLock()" id="grid-lock-btn" class="text-[11px] bg-emerald-900/60 text-emerald-300 border border-emerald-700/60 px-2.5 py-1 rounded-lg font-bold transition">
+                                <i class="fa-solid fa-lock-open mr-1"></i> Grid Unlocked
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Container -->
+                    <div id="scanner-canvas-wrapper" class="relative bg-slate-950 rounded-xl overflow-hidden border border-slate-800 min-h-[350px] sm:min-h-[480px] flex items-center justify-center group select-none">
+                        
+                        <!-- Empty Placeholder -->
+                        <div id="scanner-placeholder" class="text-center p-8 space-y-3 max-w-md">
+                            <div class="w-16 h-16 mx-auto rounded-full bg-slate-800/80 border border-slate-700 flex items-center justify-center text-3xl text-amber-400 shadow-inner">
+                                <i class="fa-solid fa-border-all"></i>
+                            </div>
+                            <h3 class="font-bold text-white text-sm sm:text-base">No Sheet Photo Loaded</h3>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                Click <b>"Snap Sheet Photo"</b> or <b>"Upload File"</b> above to load a sheet containing 9 photos. You can then adjust the 3x3 box grid over each photo and extract them perfectly!
+                            </p>
+                        </div>
+
+                        <!-- Canvas element for drawing photo & 3x3 grid -->
+                        <canvas id="scanner-canvas" class="max-w-full max-h-[600px] object-contain hidden cursor-crosshair"></canvas>
+                    </div>
+
+                    <!-- Bottom Action Controls -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+                        <div class="flex items-center space-x-2 text-xs text-slate-400">
+                            <i class="fa-solid fa-circle-info text-amber-400"></i>
+                            <span>Drag corners or sliders to align all 9 grid boxes over the page photos.</span>
+                        </div>
+                        <button id="extract-9-btn" onclick="extractNinePhotosFromSheet()" disabled class="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-black px-6 py-3 rounded-xl text-xs shadow-lg disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-scissors text-sm"></i>
+                            <span>EXTRACT ALL 9 PHOTOS NOW</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: Fine Alignment Controls -->
+                <div class="lg:col-span-4 bg-slate-900 rounded-2xl border border-slate-800 p-4 shadow-xl space-y-4 text-xs">
+                    <div class="border-b border-slate-800 pb-2">
+                        <h3 class="font-bold text-white text-sm flex items-center">
+                            <i class="fa-solid fa-sliders text-amber-400 mr-2"></i> 3x3 Grid Fine-Tuning Controls
+                        </h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Tweak grid dimensions to fit any printed layout format perfectly.</p>
+                    </div>
+
+                    <!-- Sliders -->
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between font-semibold text-slate-300 mb-1">
+                                <span>Master Grid Width</span>
+                                <span id="val-gridW" class="text-amber-400 font-mono">80%</span>
+                            </div>
+                            <input type="range" id="slider-gridW" min="20" max="100" value="80" oninput="updateGridFromSliders()" class="w-full accent-amber-500 bg-slate-800 rounded-lg h-1.5">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between font-semibold text-slate-300 mb-1">
+                                <span>Master Grid Height</span>
+                                <span id="val-gridH" class="text-amber-400 font-mono">80%</span>
+                            </div>
+                            <input type="range" id="slider-gridH" min="20" max="100" value="80" oninput="updateGridFromSliders()" class="w-full accent-amber-500 bg-slate-800 rounded-lg h-1.5">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between font-semibold text-slate-300 mb-1">
+                                <span>Horizontal Position (X)</span>
+                                <span id="val-gridX" class="text-amber-400 font-mono">10%</span>
+                            </div>
+                            <input type="range" id="slider-gridX" min="0" max="80" value="10" oninput="updateGridFromSliders()" class="w-full accent-amber-500 bg-slate-800 rounded-lg h-1.5">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between font-semibold text-slate-300 mb-1">
+                                <span>Vertical Position (Y)</span>
+                                <span id="val-gridY" class="text-amber-400 font-mono">10%</span>
+                            </div>
+                            <input type="range" id="slider-gridY" min="0" max="80" value="10" oninput="updateGridFromSliders()" class="w-full accent-amber-500 bg-slate-800 rounded-lg h-1.5">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 pt-1">
+                            <div>
+                                <div class="flex justify-between font-semibold text-slate-300 mb-1">
+                                    <span>Col Gap</span>
+                                    <span id="val-gapX" class="text-amber-400 font-mono">2%</span>
+                                </div>
+                                <input type="range" id="slider-gapX" min="0" max="15" value="2" oninput="updateGridFromSliders()" class="w-full accent-amber-500 bg-slate-800 rounded-lg h-1.5">
+                            </div>
+                            <div>
+                                <div class="flex justify-between font-semibold text-slate-300 mb-1">
+                                    <span>Row Gap</span>
+                                    <span id="val-gapY" class="text-amber-400 font-mono">2%</span>
+                                </div>
+                                <input type="range" id="slider-gapY" min="0" max="15" value="2" oninput="updateGridFromSliders()" class="w-full accent-amber-500 bg-slate-800 rounded-lg h-1.5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Target Crop Aspect Ratio Selection -->
+                    <div class="border-t border-slate-800 pt-3 space-y-2">
+                        <label class="block font-bold text-slate-300 uppercase text-[10px] tracking-wider">Output Crop Aspect Ratio</label>
+                        <div class="grid grid-cols-3 gap-1.5 text-center font-bold">
+                            <button onclick="setTargetAspectRatio('1:1')" id="aspect-btn-1-1" class="py-1.5 bg-amber-500 text-slate-950 rounded-lg border border-amber-400">
+                                1:1 Square
+                            </button>
+                            <button onclick="setTargetAspectRatio('3:4')" id="aspect-btn-3-4" class="py-1.5 bg-slate-800 text-slate-300 rounded-lg border border-slate-700 hover:bg-slate-700">
+                                3:4 Passport
+                            </button>
+                            <button onclick="setTargetAspectRatio('4:5')" id="aspect-btn-4-5" class="py-1.5 bg-slate-800 text-slate-300 rounded-lg border border-slate-700 hover:bg-slate-700">
+                                4:5 Portrait
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Preset Alignment Buttons -->
+                    <div class="border-t border-slate-800 pt-3 space-y-2">
+                        <label class="block font-bold text-slate-300 uppercase text-[10px] tracking-wider">Quick Layout Presets</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="applyGridPreset('standard')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 px-2 rounded-lg font-bold border border-slate-700">
+                                <i class="fa-solid fa-table-cells mr-1 text-amber-400"></i> Standard Grid
+                            </button>
+                            <button onclick="applyGridPreset('tight')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 px-2 rounded-lg font-bold border border-slate-700">
+                                <i class="fa-solid fa-compress mr-1 text-emerald-400"></i> Zero Gap Sheet
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ================= MODE 2: LIVE 9-GRID CAMERA STUDIO ================= -->
+        <section id="view-livegrid" style="display: none;" class="space-y-4">
+            
+            <!-- Live Studio Header Banner -->
+            <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-amber-950 border border-slate-700 rounded-2xl p-4 sm:p-5 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <div class="flex items-center space-x-2">
+                        <span class="bg-amber-400 text-slate-950 font-black text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider">Live Camera Studio</span>
+                        <span id="active-cell-indicator" class="bg-slate-800 text-amber-300 border border-amber-500/40 text-[10px] font-bold px-2 py-0.5 rounded-full">Current Target: Cell #1</span>
+                    </div>
+                    <h2 class="text-lg sm:text-2xl font-black text-white">Snap 9 Photos Directly into a 3x3 Grid Sheet</h2>
+                    <p class="text-xs text-slate-300 max-w-xl">
+                        Tap any cell in the 3x3 grid below to activate the live camera. Point, align using the face silhouette, and snap! A      canvas.height = video.videoHeight;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
