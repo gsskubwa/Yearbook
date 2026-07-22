@@ -171,6 +171,278 @@
                     <!-- Top Status Bar -->
                     <div class="flex items-center justify-between border-b border-slate-800 pb-2 text-xs">
                         <div class="flex items-center space-x-2">
+                            <!-- Camera Device Selection Dropdown -->
+                            <select id="camera-select" onchange="switchCameraDevice(this.value)" class="bg-slate-800 text-slate-300 border border-slate-700 rounded-lg text-xs px-2 py-1 font-semibold focus:outline-none hidden max-w-[140px] truncate">
+                                <option value="">Default Camera</option>
+                            </select>
+                            <button onclick="toggleWebcam()" id="toggle-cam-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1 rounded-lg font-bold transition flex items-center space-x-1 text-xs">
+                                <i class="fa-solid fa-video"></i>
+                                <span id="cam-btn-text">Start Camera</span>
+                            </button>
+                            <label class="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-2.5 py-1 rounded-lg font-bold cursor-pointer transition text-xs flex items-center space-x-1">
+                                <i class="fa-solid fa-upload text-amber-400"></i>
+                                <span>Upload</span>
+                                <input type="file" accept="image/*" onchange="uploadPhotoForActiveNumber(event)" class="hidden">
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Camera / Preview Stage Frame -->
+                    <div id="camera-viewport-box" class="relative bg-slate-950 rounded-xl overflow-hidden border border-slate-800 min-h-[380px] sm:min-h-[460px] flex items-center justify-center group select-none">
+                        
+                        <!-- Video Element for Live Camera Stream -->
+                        <video id="webcam-video" autoplay playsinline muted class="w-full h-full object-cover hidden"></video>
+
+                        <!-- Captured Image Preview Element -->
+                        <img id="captured-img-preview" class="w-full h-full object-cover hidden" alt="Captured Photo">
+
+                        <!-- Shutter Flash Effect Overlay -->
+                        <div id="shutter-flash" class="absolute inset-0 pointer-events-none opacity-0"></div>
+
+                        <!-- Silhouette Face Guide Overlay -->
+                        <div id="silhouette-guide" class="absolute inset-0 pointer-events-none flex flex-col items-center justify-center opacity-40">
+                            <div class="w-44 h-56 sm:w-56 sm:h-72 border-2 border-dashed border-amber-400 rounded-full flex flex-col items-center justify-center p-4">
+                                <i class="fa-solid fa-user text-amber-400/30 text-6xl mt-4"></i>
+                                <span class="text-[10px] text-amber-300 font-bold uppercase tracking-widest mt-auto bg-slate-950/80 px-2 py-0.5 rounded">Center Face</span>
+                            </div>
+                        </div>
+
+                        <!-- Empty Placeholder (No camera / no photo) -->
+                        <div id="viewport-empty-placeholder" class="text-center p-8 space-y-3 max-w-sm">
+                            <div class="w-16 h-16 mx-auto rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-3xl text-indigo-400">
+                                <i class="fa-solid fa-camera"></i>
+                            </div>
+                            <h3 class="font-bold text-white text-base">Camera Stream Inactive</h3>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                Click <b>"Start Camera"</b> above to begin taking photos sequentially for numbers <b>1 to 714</b>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Action Bar: Big Snap Button -->
+                    <div class="pt-2 flex items-center justify-between gap-3">
+                        <button id="snap-photo-btn" onclick="snapCurrentNumberPhoto()" disabled class="w-full bg-gradient-to-r from-indigo-500 via-purple-600 to-indigo-600 hover:from-indigo-400 hover:to-purple-500 text-white font-black py-4 rounded-xl text-base shadow-xl disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center justify-center space-x-3">
+                            <i class="fa-solid fa-circle-dot text-amber-400 text-xl animate-pulse"></i>
+                            <span id="snap-btn-label">SNAP PHOTO FOR NUMBER #1</span>
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- Right: Active Number Details & Adjustments -->
+                <div class="lg:col-span-4 bg-slate-900 rounded-2xl border border-slate-800 p-4 shadow-xl space-y-4 text-xs">
+                    
+                    <div class="border-b border-slate-800 pb-2">
+                        <h3 class="font-bold text-white text-sm flex items-center">
+                            <i class="fa-solid fa-user-gear text-indigo-400 mr-2"></i> Slot Details & Fine-Tuning
+                        </h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Manage candidate info and image properties for slot <b id="inspector-slot-num-text">#1</b>.</p>
+                    </div>
+
+                    <!-- Candidate Name / Tag Input -->
+                    <div class="space-y-1.5">
+                        <label class="block font-bold text-slate-300">Candidate Name or Label (Optional)</label>
+                        <input type="text" id="slot-label-input" oninput="updateActiveSlotLabel(this.value)" placeholder="e.g. John Doe or Student ID" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs font-semibold text-amber-300 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    </div>
+
+                    <!-- Image Adjustments -->
+                    <div class="space-y-3 pt-2 border-t border-slate-800">
+                        <label class="block font-bold text-slate-300 uppercase text-[10px] tracking-wider">Image Filter & Fit Controls</label>
+
+                        <div>
+                            <div class="flex justify-between font-semibold text-slate-300 mb-1">
+                                <span>Zoom / Scale</span>
+                                <span id="val-zoom" class="text-indigo-400 font-mono">1.0x</span>
+                            </div>
+                            <input type="range" id="slider-zoom" min="1.0" max="2.5" step="0.05" value="1.0" oninput="updateActiveSlotFilters()" class="w-full accent-indigo-500 bg-slate-800 rounded-lg h-1.5">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between font-semibold text-slate-300 mb-1">
+                                <span>Brightness</span>
+                                <span id="val-brightness" class="text-indigo-400 font-mono">100%</span>
+                            </div>
+                            <input type="range" id="slider-brightness" min="50" max="150" value="100" oninput="updateActiveSlotFilters()" class="w-full accent-indigo-500 bg-slate-800 rounded-lg h-1.5">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between font-semibold text-slate-300 mb-1">
+                                <span>Contrast</span>
+                                <span id="val-contrast" class="text-indigo-400 font-mono">100%</span>
+                            </div>
+                            <input type="range" id="slider-contrast" min="50" max="150" value="100" oninput="updateActiveSlotFilters()" class="w-full accent-indigo-500 bg-slate-800 rounded-lg h-1.5">
+                        </div>
+                    </div>
+
+                    <!-- Delete / Clear Photo for current active number -->
+                    <div class="border-t border-slate-800 pt-3 space-y-2">
+                        <button onclick="clearActiveNumberPhoto()" id="clear-slot-photo-btn" disabled class="w-full bg-slate-800 hover:bg-rose-900/40 border border-slate-700 hover:border-rose-700/60 text-slate-300 hover:text-rose-300 font-bold py-2.5 rounded-xl transition flex items-center justify-center space-x-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-trash-can text-rose-400"></i>
+                            <span>Delete Photo for Number <span id="delete-btn-num-text">#1</span></span>
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: ROSTER CATALOG (1 - 714) ================= -->
+        <section id="view-roster" style="display: none;" class="space-y-4">
+            
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-lg sm:text-xl font-black text-white flex items-center">
+                        <i class="fa-solid fa-list-ol text-indigo-400 mr-2"></i> Roster Grid Catalog (1 to 714)
+                    </h2>
+                    <p class="text-xs text-slate-400">Review, filter, or jump directly to any candidate slot in your sequence.</p>
+                </div>
+
+                <!-- Search & Filters -->
+                <div class="flex items-center gap-2 flex-wrap w-full md:w-auto">
+                    <div class="relative flex-1 md:w-48">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+                        <input type="text" id="roster-search-input" oninput="renderRosterGrid()" placeholder="Search # or name..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    </div>
+
+                    <select id="roster-filter-select" onchange="renderRosterGrid()" class="bg-slate-950 border border-slate-800 text-slate-300 text-xs rounded-xl px-3 py-1.5 font-bold focus:outline-none">
+                   <style>
+        html, body {
+            overflow-x: hidden !important;
+            width: 100% !important;
+            margin: 0;
+            padding: 0;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #1e293b; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+
+        .number-card {
+            transition: all 0.15s ease-in-out;
+        }
+        .number-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .camera-shutter-flash {
+            animation: shutterFlash 0.3s ease-out;
+        }
+        @keyframes shutterFlash {
+            0% { opacity: 1; background-color: #ffffff; }
+            100% { opacity: 0; background-color: transparent; }
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+    <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40 px-3 sm:px-6 py-3">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+            
+            <!-- Logo Brand -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('camera')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-indigo-500/20">
+                    <i class="fa-solid fa-camera-retro"></i>
+                </div>
+                <div>
+                    <h1 class="font-black text-base sm:text-lg tracking-tight bg-gradient-to-r from-indigo-400 via-purple-300 to-amber-300 bg-clip-text text-transparent">
+                        NumberSnap <span class="text-indigo-400">714</span> Studio
+                    </h1>
+                    <p class="text-[10px] text-slate-400 font-semibold tracking-wide uppercase">Sequential Photo Capturer & Batch Organizer</p>
+                </div>
+            </div>
+
+            <!-- Progress Tracker Indicator -->
+            <div class="flex items-center space-x-3 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700/60 text-xs">
+                <div class="text-right">
+                    <div class="font-bold text-white flex items-center justify-end space-x-1">
+                        <span id="captured-count-num" class="text-indigo-400 font-black">0</span>
+                        <span class="text-slate-400">/</span>
+                        <span id="total-slots-num" class="text-slate-300">714</span>
+                        <span class="text-[10px] text-slate-400 font-normal">Captured</span>
+                    </div>
+                    <div class="w-28 bg-slate-900 h-1.5 rounded-full overflow-hidden mt-0.5">
+                        <div id="header-progress-bar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-full w-0 transition-all duration-300"></div>
+                    </div>
+                </div>
+                <span id="header-progress-percent" class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-black text-[10px] px-2 py-0.5 rounded-md">
+                    0.0%
+                </span>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <nav class="flex items-center space-x-1 bg-slate-800 p-1 rounded-xl border border-slate-700/60">
+                <button id="tab-btn-camera" onclick="switchTab('camera')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1.5 bg-indigo-600 text-white shadow">
+                    <i class="fa-solid fa-camera"></i>
+                    <span>Camera Snap</span>
+                </button>
+                <button id="tab-btn-roster" onclick="switchTab('roster')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1.5 text-slate-300 hover:text-white">
+                    <i class="fa-solid fa-list-ol"></i>
+                    <span>Roster (1–714)</span>
+                </button>
+                <button id="tab-btn-export" onclick="switchTab('export')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center space-x-1.5 text-slate-300 hover:text-white">
+                    <i class="fa-solid fa-file-export"></i>
+                    <span>Export & Backup</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Global Toast Container -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <main class="max-w-7xl w-full mx-auto px-3 sm:px-6 py-4 flex-grow">
+
+        <!-- ================= TAB 1: CAMERA SNAPPER & SEQUENTIAL CONTROLLER ================= -->
+        <section id="view-camera" class="space-y-4">
+
+            <!-- Number Navigation & Quick Controls Header -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+                
+                <!-- Active Number Selector -->
+                <div class="flex items-center space-x-3 w-full md:w-auto justify-between md:justify-start">
+                    <button onclick="navigateNumber(-1)" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg shadow transition">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+
+                    <div class="text-center px-2">
+                        <span class="text-[10px] font-extrabold text-indigo-400 uppercase tracking-widest block">Active Number Target</span>
+                        <div class="flex items-center justify-center space-x-1">
+                            <span class="text-slate-500 font-black text-xl">#</span>
+                            <input type="number" id="active-number-input" min="1" max="714" value="1" onchange="onNumberInputChange(this.value)" class="bg-slate-950 border border-indigo-500/50 rounded-xl px-2 py-0.5 text-center font-black text-2xl text-amber-400 w-24 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <span class="text-slate-500 font-bold text-sm">/ 714</span>
+                        </div>
+                    </div>
+
+                    <button onclick="navigateNumber(1)" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg shadow transition">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- Quick Jumper Actions -->
+                <div class="flex items-center gap-2 flex-wrap w-full md:w-auto justify-center">
+                    <button onclick="jumpToNextUncaptured()" class="bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1.5">
+                        <i class="fa-solid fa-forward text-amber-400"></i>
+                        <span>Jump to Next Missing</span>
+                    </button>
+
+                    <label class="flex items-center space-x-2 bg-slate-800 px-3 py-2 rounded-xl border border-slate-700 cursor-pointer text-xs text-slate-300">
+                        <input type="checkbox" id="auto-advance-chk" checked class="rounded accent-indigo-500">
+                        <span class="font-bold">Auto-Next after Snap</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Main Interactive Camera Viewport & Fine-Tune Panel -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                
+                <!-- Left: Live Video & Canvas Preview -->
+                <div class="lg:col-span-8 bg-slate-900 rounded-2xl border border-slate-800 p-3 sm:p-4 shadow-xl space-y-3 flex flex-col justify-between">
+                    
+                    <!-- Top Status Bar -->
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2 text-xs">
+                        <div class="flex items-center space-x-2">
                             <span id="active-slot-badge" class="bg-indigo-600 text-white font-black px-2.5 py-1 rounded-lg text-xs shadow">
                                 NUMBER #1
                             </span>
