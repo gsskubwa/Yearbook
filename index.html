@@ -1,129 +1,288 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuickSnap - Auto-Named Photo Capture</title>
-  <style>
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: #121212; color: #fff; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-    .card { background: #1e1e1e; padding: 20px; border-radius: 12px; width: 100%; max-width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-    h2 { margin-top: 0; text-align: center; color: #4da6ff; }
-    .form-group { margin-bottom: 15px; }
-    label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
-    input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #2a2a2a; color: #fff; font-size: 1rem; }
-    input:focus { outline: 2px solid #4da6ff; }
-    .camera-box { position: relative; width: 100%; aspect-ratio: 4/3; background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 15px; }
-    video, canvas { width: 100%; height: 100%; object-fit: cover; }
-    .btn-group { display: flex; gap: 10px; }
-    button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; }
-    .btn-capture { background: #00c853; color: white; }
-    .btn-capture:disabled { background: #444; color: #888; cursor: not-allowed; }
-    .btn-reset { background: #333; color: white; }
-    .status { text-align: center; margin-top: 10px; font-size: 0.85rem; color: #aaa; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GSS Kubwa Class of 2026 - Digital Yearbook</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#16a34a',
+                            600: '#15803d',
+                            700: '#166534',
+                            800: '#14532d',
+                            900: '#062c12',
+                            gold: '#d97706'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html, body {
+            overflow-x: hidden !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0;
+            padding: 0;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
 </head>
-<body>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-emerald-200">
 
-<div class="card">
-  <h2>QuickSnap ID Capture</h2>
+    <!-- Header Navigation -->
+    <header class="bg-brand-900 text-white sticky top-0 z-40 shadow-md border-b border-brand-800 w-full">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="navigateTo('gallery')">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-amber-500 flex items-center justify-center font-bold text-brand-900 text-sm sm:text-base shadow-inner">
+                    GSSK
+                </div>
+                <div>
+                    <h1 class="font-serif font-bold text-sm sm:text-lg leading-tight text-amber-100">GSS KUBWA</h1>
+                    <p class="text-[9px] sm:text-[10px] text-brand-100 tracking-wider font-bold">CLASS OF 2026</p>
+                </div>
+            </div>
 
-  <div class="form-group">
-    <label for="personName">Person's Name:</label>
-    <input type="text" id="personName" list="rosterList" placeholder="Search or type name..." autocomplete="off">
-    <!-- Optional search roster auto-complete -->
-    <datalist id="rosterList">
-      <option value="Alex Johnson"></option>
-      <option value="Blessing Okon"></option>
-      <option value="David Smith"></option>
-      <option value="Sarah Connor"></option>
-    </datalist>
-  </div>
+            <!-- Nav Controls -->
+            <nav class="flex items-center space-x-1 sm:space-x-2">
+                <button onclick="navigateTo('gallery')" id="nav-gallery" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition bg-brand-800 text-white border border-brand-700">
+                    <i class="fa-solid fa-graduation-cap sm:mr-1 text-amber-300"></i><span class="hidden sm:inline">Students</span>
+                </button>
+                <button onclick="navigateTo('snap-studio')" id="nav-snap" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition bg-amber-500 text-brand-900 hover:bg-amber-400 shadow-sm">
+                    <i class="fa-solid fa-camera sm:mr-1"></i><span class="hidden sm:inline">Snap & Save</span>
+                </button>
+                <button onclick="navigateTo('student-login')" id="nav-student" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition text-brand-100 hover:bg-brand-800">
+                    <i class="fa-solid fa-user-pen sm:mr-1 text-emerald-300"></i><span id="nav-student-label" class="hidden sm:inline">Portal</span>
+                </button>
+                <button onclick="navigateTo('admin-login')" id="nav-admin" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition bg-slate-800 text-white hover:bg-slate-700 shadow-sm">
+                    <i class="fa-solid fa-cloud-arrow-up sm:mr-1"></i><span class="hidden sm:inline">Bulk Studio</span>
+                </button>
+            </nav>
+        </div>
+    </header>
 
-  <div class="camera-box">
-    <video id="video" autoplay playsinline></video>
-    <canvas id="canvas" style="display:none;"></canvas>
-  </div>
+    <!-- Global Banner -->
+    <div id="status-banner" class="bg-brand-800 border-b border-brand-700 text-emerald-100 text-[10px] sm:text-xs py-1.5 px-3 text-center font-bold shadow-inner w-full">
+        <i class="fa-solid fa-bolt text-amber-400 mr-1"></i> Live Snap Camera & Name Matcher Ready!
+    </div>
 
-  <div class="btn-group">
-    <button id="captureBtn" class="btn-capture" disabled>Snap & Save</button>
-    <button id="resetBtn" class="btn-reset">Reset / Next</button>
-  </div>
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 py-4">
 
-  <p class="status" id="statusText">Enter a name to enable capture.</p>
-</div>
+        <!-- ================= GALLERY VIEW ================= -->
+        <section id="view-gallery" class="space-y-4">
+            <div class="bg-gradient-to-r from-brand-900 via-brand-800 to-slate-900 rounded-2xl p-4 sm:p-6 text-white shadow-xl relative overflow-hidden">
+                <div class="relative z-10 max-w-2xl space-y-1.5">
+                    <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Official 2026 Graduating Class</span>
+                    <h2 class="text-xl sm:text-3xl font-serif font-bold text-white">Government Secondary School, Kubwa</h2>
+                    <p class="text-brand-100 text-xs sm:text-sm leading-relaxed">Explore all 714 candidates. Search by student name or candidate number. Click on any student to view their profile or sign digital autographs.</p>
+                </div>
+            </div>
 
-<script>
-  const video = document.getElementById('video');
-  const canvas = document.getElementById('canvas');
-  const nameInput = document.getElementById('personName');
-  const captureBtn = document.getElementById('captureBtn');
-  const resetBtn = document.getElementById('resetBtn');
-  const statusText = document.getElementById('statusText');
+            <!-- Search & Filter -->
+            <div class="bg-white rounded-xl p-3 shadow-sm border border-slate-200 space-y-3 md:space-y-0 md:flex md:items-center md:justify-between md:gap-4">
+                <div class="relative w-full md:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+                    <input type="text" id="search-input" oninput="filterStudents()" placeholder="Search candidate # (e.g. 14) or name..." class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+                <div class="flex items-center gap-2 text-xs font-bold w-full md:w-auto">
+                    <select id="gender-filter" onchange="filterStudents()" class="flex-1 sm:flex-none bg-slate-50 border border-slate-300 rounded-lg py-2 px-2.5 focus:ring-2 focus:ring-brand-500">
+                        <option value="all">All Genders</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                    <div class="bg-brand-50 text-brand-700 py-2 px-3 rounded-lg border border-brand-200 whitespace-nowrap">
+                        Showing: <span id="student-count-badge" class="font-black text-brand-900">714</span> / 714
+                    </div>
+                </div>
+            </div>
 
-  // 1. Start Camera Feed
-  async function initCamera() {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { width: { ideal: 1280 }, height: { ideal: 960 }, facingMode: "user" }
-      });
-      video.srcObject = stream;
-    } catch (err) {
-      alert("Unable to access camera: " + err.message);
-      statusText.innerText = "Camera permission error.";
-    }
-  }
+            <!-- Student Grid -->
+            <div id="students-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+                <!-- Dynamically Populated -->
+            </div>
 
-  // 2. Validate input name before enabling snap
-  nameInput.addEventListener('input', () => {
-    if (nameInput.value.trim().length > 0) {
-      captureBtn.disabled = false;
-      statusText.innerText = "Ready to capture!";
-    } else {
-      captureBtn.disabled = true;
-      statusText.innerText = "Enter a name to enable capture.";
-    }
-  });
+            <!-- Pagination -->
+            <div class="flex items-center justify-between bg-white px-3 py-2.5 rounded-xl border border-slate-200">
+                <button id="prev-page-btn" onclick="changePage(-1)" class="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold hover:bg-slate-200 disabled:opacity-40">
+                    <i class="fa-solid fa-chevron-left mr-1"></i> Prev
+                </button>
+                <span id="page-indicator" class="text-xs font-bold text-slate-600">Page 1 of 1</span>
+                <button id="next-page-btn" onclick="changePage(1)" class="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold hover:bg-slate-200 disabled:opacity-40">
+                    Next <i class="fa-solid fa-chevron-right ml-1"></i>
+                </button>
+            </div>
+        </section>
 
-  // 3. Capture Photo & Auto-Download
-  captureBtn.addEventListener('click', () => {
-    const rawName = nameInput.value.trim();
-    if (!rawName) return;
 
-    // Clean name for standard file formatting (e.g. "John Doe" -> "John_Doe")
-    const cleanFileName = rawName.replace(/[^a-zA-Z0-9\s-_]/g, '').trim().replace(/\s+/g, '_');
+        <!-- ================= LIVE CAMERA SNAP & SAVE STUDIO ================= -->
+        <section id="view-snap-studio" style="display: none;" class="max-w-2xl mx-auto space-y-4 py-2">
+            <div class="bg-gradient-to-r from-amber-600 via-brand-800 to-brand-900 rounded-2xl p-4 text-white shadow-xl flex items-center justify-between">
+                <div>
+                    <span class="bg-amber-400 text-brand-900 text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-wider">Instant Photo Studio</span>
+                    <h2 class="text-lg sm:text-2xl font-serif font-bold mt-1">Search Name, Snap & Save</h2>
+                    <p class="text-xs text-brand-100 mt-0.5">Select any candidate from the official list, snap their photo, and save instantly!</p>
+                </div>
+                <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-2xl text-amber-300">
+                    <i class="fa-solid fa-camera-retro"></i>
+                </div>
+            </div>
 
-    // Draw video frame to canvas
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            <!-- Step 1: Search Name -->
+            <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-200 space-y-3">
+                <label class="block font-bold text-slate-800 text-xs uppercase tracking-wide">
+                    <i class="fa-solid fa-user-check text-amber-500 mr-1"></i> 1. Search Candidate Name or S/N
+                </label>
+                <div class="relative">
+                    <input type="text" id="snap-name-search" oninput="handleSnapSearchInput()" placeholder="Type student name (e.g., Abass, Adebayo, Aisha...) or S/N..." class="w-full pl-9 pr-8 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-slate-400 text-sm"></i>
+                    <button id="snap-search-clear" onclick="clearSnapSearch()" class="hidden absolute right-3 top-3 text-slate-400 hover:text-slate-600">
+                        <i class="fa-solid fa-circle-xmark text-lg"></i>
+                    </button>
+                    
+                    <!-- Search Auto-complete Dropdown -->
+                    <div id="snap-search-results" style="display: none;" class="absolute z-30 left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl max-h-60 overflow-y-auto divide-y divide-slate-100 custom-scrollbar">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
 
-    // Save as JPG
-    const imageData = canvas.toDataURL('image/jpeg', 0.92);
-    
-    // Trigger browser download
-    const link = document.createElement('a');
-    link.href = imageData;
-    link.download = `${cleanFileName}.jpg`;
-    link.click();
+                <!-- Selected Candidate Card Indicator -->
+                <div id="snap-selected-card" class="bg-brand-50 border border-brand-200 rounded-xl p-3 flex items-center justify-between" style="display: none;">
+                    <div class="flex items-center space-x-3">
+                        <img id="snap-target-avatar" src="" class="w-12 h-12 rounded-lg object-cover border border-brand-300 bg-white shadow-sm">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span id="snap-target-sn" class="bg-amber-500 text-slate-900 text-[10px] font-black px-1.5 py-0.5 rounded"></span>
+                                <h3 id="snap-target-name" class="font-serif font-bold text-brand-900 text-sm"></h3>
+                            </div>
+                            <p id="snap-target-gender" class="text-[11px] text-brand-700 font-medium"></p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-lg">
+                        <i class="fa-solid fa-circle-check mr-1"></i> Target Selected
+                    </span>
+                </div>
+            </div>
 
-    statusText.innerText = `Saved as "${cleanFileName}.jpg"!`;
-    
-    // Highlight input for the next person
-    nameInput.select();
-  });
+            <!-- Step 2: Camera & Capture Viewport -->
+            <div id="snap-camera-box" class="bg-white rounded-2xl p-4 shadow-md border border-slate-200 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                    <label class="font-bold text-slate-800 text-xs uppercase tracking-wide">
+                        <i class="fa-solid fa-camera text-brand-600 mr-1"></i> 2. Camera Preview & Snap
+                    </label>
+                    <button id="toggle-camera-btn" onclick="startCameraStream()" class="text-xs bg-brand-800 hover:bg-brand-700 text-white font-bold px-3 py-1.5 rounded-lg shadow transition">
+                        <i class="fa-solid fa-video mr-1"></i> Start Camera
+                    </button>
+                </div>
 
-  // 4. Reset for Next Person
-  resetBtn.addEventListener('click', () => {
-    nameInput.value = '';
-    captureBtn.disabled = true;
-    nameInput.focus();
-    statusText.innerText = "Ready for next person.";
-  });
+                <!-- Camera/Preview Display Container -->
+                <div class="relative bg-slate-900 rounded-xl overflow-hidden aspect-[4/3] max-w-md mx-auto flex items-center justify-center border-2 border-slate-800 shadow-inner">
+                    <!-- Live Video Feed -->
+                    <video id="webcam-feed" autoplay playsinline class="w-full h-full object-cover hidden"></video>
+                    
+                    <!-- Captured Photo Preview -->
+                    <img id="snap-captured-preview" class="w-full h-full object-cover hidden" alt="Captured Photo">
+                    
+                    <!-- Camera Placeholder when stopped -->
+                    <div id="webcam-placeholder" class="text-center p-6 space-y-2 text-slate-400">
+                        <i class="fa-solid fa-video-slash text-4xl mb-1 text-slate-500"></i>
+                        <p class="text-xs font-bold">Camera is off. Click "Start Camera" above or upload a photo file below.</p>
+                    </div>
 
-  initCamera();
-</script>
+                    <!-- Flash overlay animation -->
+                    <div id="camera-flash" class="absolute inset-0 bg-white opacity-0 pointer-events-none transition-opacity duration-150"></div>
+                </div>
 
-</body>
-</html>
+                <!-- Camera Action Controls -->
+                <div class="flex flex-wrap items-center justify-center gap-2 pt-1">
+                    <button id="take-snap-btn" onclick="captureSnapPhoto()" disabled class="bg-amber-500 hover:bg-amber-400 text-brand-900 font-black px-6 py-2.5 rounded-xl text-xs shadow-md disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center">
+                        <i class="fa-solid fa-circle-dot mr-1.5 text-base text-rose-600"></i> SNAP PHOTO
+                    </button>
+                    
+                    <button id="retake-btn" onclick="retakePhoto()" style="display: none;" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-4 py-2.5 rounded-xl text-xs transition">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> Re-take
+                    </button>
+
+                    <label class="bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-bold px-4 py-2.5 rounded-xl text-xs cursor-pointer transition">
+                        <i class="fa-solid fa-upload mr-1"></i> Choose File
+                        <input type="file" accept="image/*" onchange="handleSnapFileUpload(event)" class="hidden">
+                    </label>
+                </div>
+
+                <!-- Step 3: Save Button -->
+                <div class="border-t border-slate-100 pt-3">
+                    <button id="save-snap-btn" onclick="saveCapturedPhotoToStudent()" disabled class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl text-sm shadow-lg disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-floppy-disk text-base"></i>
+                        <span id="save-snap-btn-text">Select Candidate & Take Photo to Save</span>
+                    </button>
+                </div>
+
+                <!-- Instant Notification Banner -->
+                <div id="snap-alert-banner" style="display: none;" class="bg-emerald-50 border border-emerald-300 text-emerald-800 font-bold p-3 rounded-xl text-xs text-center space-y-1">
+                    <p id="snap-alert-text"></p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= STUDENT PROFILE MODAL ================= -->
+        <div id="profile-modal" style="display: none;" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto">
+            <div class="bg-white rounded-t-2xl sm:rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl my-0 sm:my-6 max-h-[92vh] flex flex-col">
+                <div class="bg-brand-900 text-white p-3.5 sm:p-5 flex items-start justify-between relative border-b border-brand-800">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <img id="modal-student-img" src="" alt="" class="w-14 h-14 sm:w-18 sm:h-18 rounded-xl object-cover border-2 border-white shadow bg-slate-200">
+                            <span id="modal-candidate-badge" class="absolute -bottom-1 -right-1 bg-amber-500 text-slate-900 text-[9px] font-black px-1.5 py-0.5 rounded shadow"></span>
+                        </div>
+                        <div>
+                            <span class="bg-brand-800 text-amber-300 border border-brand-700 text-[9px] font-bold px-1.5 py-0.5 rounded">GSS KUBWA CLASS OF 2026</span>
+                            <h3 id="modal-student-name" class="text-base sm:text-xl font-serif font-bold text-white leading-tight mt-0.5"></h3>
+                            <p id="modal-student-meta" class="text-brand-100 text-[10px] sm:text-xs mt-0.5"></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="snapForCurrentModalStudent()" class="bg-amber-500 hover:bg-amber-400 text-brand-900 font-bold px-2.5 py-1.5 rounded-lg text-xs shadow flex items-center space-x-1">
+                            <i class="fa-solid fa-camera"></i>
+                            <span class="hidden sm:inline">Snap Photo</span>
+                        </button>
+                        <button onclick="closeModal()" class="text-slate-300 hover:text-white p-1.5 rounded-full hover:bg-brand-800">
+                            <i class="fa-solid fa-xmark text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="p-4 sm:p-5 overflow-y-auto custom-scrollbar flex-grow space-y-4 text-xs">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div class="bg-amber-50/90 border-l-3 border-amber-500 p-2.5 rounded-r-lg shadow-sm">
+                            <p class="text-[9px] uppercase font-bold text-amber-800 flex items-center">
+                                <i class="fa-solid fa-quote-left mr-1 text-amber-500"></i> Senior Yearbook Quote
+                            </p>
+                            <p id="modal-quote" class="text-slate-800 italic font-serif mt-1 text-xs leading-relaxed"></p>
+                        </div>
+                        <div class="bg-emerald-50/90 border-l-3 border-emerald-500 p-2.5 rounded-r-lg shadow-sm">
+                            <p class="text-[9px] uppercase font-bold text-emerald-800 flex items-center">
+                                <i class="fa-solid fa-heart mr-1 text-emerald-600"></i> Hobbies & Interests
+                            </p>
+                            <p id="modal-hobbies" class="text-slate-800 font-medium mt-1 text-xs leading-relaxed"></p>
+                        </div>
+                   
