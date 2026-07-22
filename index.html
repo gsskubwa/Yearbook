@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GSS Kubwa Class of 2026 - Digital Yearbook</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -11,11 +11,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
-    
-    <!-- Firebase SDKs (Optional Fallback) -->
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
 
     <script>
         tailwind.config = {
@@ -35,6 +30,267 @@
                     },
                     fontFamily: {
                         sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html, body {
+            overflow-x: hidden !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        #camera-video { transform: scaleX(-1); }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-emerald-200">
+
+    <!-- Header Navigation -->
+    <header class="bg-brand-900 text-white sticky top-0 z-40 shadow-md border-b border-brand-800 w-full">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="navigateTo('gallery')">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-amber-500 flex items-center justify-center font-bold text-brand-900 text-sm sm:text-base shadow-inner">
+                    GSSK
+                </div>
+                <div>
+                    <h1 class="font-serif font-bold text-sm sm:text-lg leading-tight text-amber-100">GSS KUBWA</h1>
+                    <p class="text-[9px] sm:text-[10px] text-brand-100 tracking-wider font-bold">CLASS OF 2026</p>
+                </div>
+            </div>
+
+            <!-- Nav Controls -->
+            <nav class="flex items-center space-x-1 sm:space-x-2">
+                <button onclick="navigateTo('gallery')" id="nav-gallery" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition bg-brand-800 text-white border border-brand-700">
+                    <i class="fa-solid fa-graduation-cap sm:mr-1 text-amber-300"></i><span class="hidden sm:inline">Students</span>
+                </button>
+                <button onclick="navigateTo('student-login')" id="nav-student" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition text-brand-100 hover:bg-brand-800">
+                    <i class="fa-solid fa-user-pen sm:mr-1 text-emerald-300"></i><span id="nav-student-label" class="hidden sm:inline">Portal</span>
+                </button>
+                <button onclick="navigateTo('admin-login')" id="nav-admin" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition bg-amber-600 text-white hover:bg-amber-500 shadow-sm">
+                    <i class="fa-solid fa-camera sm:mr-1"></i><span class="hidden sm:inline">Studio</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Global Notice Banner -->
+    <div id="status-banner" class="bg-brand-800 border-b border-brand-700 text-emerald-100 text-[10px] sm:text-xs py-1.5 px-3 text-center font-bold shadow-inner w-full">
+        <i class="fa-solid fa-camera text-amber-400 mr-1"></i> Rapid Candidate Photographer Studio Ready • Tap Studio Above
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 py-4">
+
+        <!-- ================= GALLERY VIEW ================= -->
+        <section id="view-gallery" class="space-y-4">
+            <div class="bg-gradient-to-r from-brand-900 via-brand-800 to-slate-900 rounded-2xl p-4 sm:p-6 text-white shadow-xl relative overflow-hidden">
+                <div class="relative z-10 max-w-2xl space-y-1.5">
+                    <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Official 2026 Graduating Class</span>
+                    <h2 class="text-xl sm:text-3xl font-serif font-bold text-white">Government Secondary School, Kubwa</h2>
+                    <p class="text-brand-100 text-xs sm:text-sm leading-relaxed">Explore all 714 candidates. Search by student name or candidate number. Click on any student to view their profile or sign digital autographs.</p>
+                </div>
+            </div>
+
+            <!-- Search & Filter -->
+            <div class="bg-white rounded-xl p-3 shadow-sm border border-slate-200 space-y-3 md:space-y-0 md:flex md:items-center md:justify-between md:gap-4">
+                <div class="relative w-full md:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+                    <input type="text" id="search-input" oninput="filterStudents()" placeholder="Search candidate # (e.g. 14) or name..." class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs font-medium focus:outline-none focus:ring-2 focus:ring-brand-500">
+                </div>
+                <div class="flex items-center gap-2 text-xs font-bold w-full md:w-auto">
+                    <select id="gender-filter" onchange="filterStudents()" class="flex-1 sm:flex-none bg-slate-50 border border-slate-300 rounded-lg py-2 px-2.5 focus:ring-2 focus:ring-brand-500">
+                        <option value="all">All Genders</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                    <div class="bg-brand-50 text-brand-700 py-2 px-3 rounded-lg border border-brand-200 whitespace-nowrap">
+                        Showing: <span id="student-count-badge" class="font-black text-brand-900">714</span> / 714
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Grid -->
+            <div id="students-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+                <!-- Dynamically Populated -->
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex items-center justify-between bg-white px-3 py-2.5 rounded-xl border border-slate-200">
+                <button id="prev-page-btn" onclick="changePage(-1)" class="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold hover:bg-slate-200 disabled:opacity-40">
+                    <i class="fa-solid fa-chevron-left mr-1"></i> Prev
+                </button>
+                <span id="page-indicator" class="text-xs font-bold text-slate-600">Page 1 of 1</span>
+                <button id="next-page-btn" onclick="changePage(1)" class="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold hover:bg-slate-200 disabled:opacity-40">
+                    Next <i class="fa-solid fa-chevron-right ml-1"></i>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- ================= STUDENT PROFILE MODAL ================= -->
+        <div id="profile-modal" style="display: none;" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto">
+            <div class="bg-white rounded-t-2xl sm:rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl my-0 sm:my-6 max-h-[92vh] flex flex-col">
+                <!-- Modal Header -->
+                <div class="bg-brand-900 text-white p-3.5 sm:p-5 flex items-start justify-between relative border-b border-brand-800">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <img id="modal-student-img" src="" alt="" class="w-14 h-14 sm:w-18 sm:h-18 rounded-xl object-cover border-2 border-white shadow bg-slate-200">
+                            <span id="modal-candidate-badge" class="absolute -bottom-1 -right-1 bg-amber-500 text-slate-900 text-[9px] font-black px-1.5 py-0.5 rounded shadow"></span>
+                        </div>
+                        <div>
+                            <span class="bg-brand-800 text-amber-300 border border-brand-700 text-[9px] font-bold px-1.5 py-0.5 rounded">GSS KUBWA CLASS OF 2026</span>
+                            <h3 id="modal-student-name" class="text-base sm:text-xl font-serif font-bold text-white leading-tight mt-0.5"></h3>
+                            <p id="modal-student-meta" class="text-brand-100 text-[10px] sm:text-xs mt-0.5"></p>
+                        </div>
+                    </div>
+                    <button onclick="closeModal()" class="text-slate-300 hover:text-white p-1.5 rounded-full hover:bg-brand-800">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="p-4 sm:p-5 overflow-y-auto custom-scrollbar flex-grow space-y-4 text-xs">
+                    <!-- Motto & Hobbies -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div class="bg-amber-50/90 border-l-3 border-amber-500 p-2.5 rounded-r-lg shadow-sm">
+                            <p class="text-[9px] uppercase font-bold text-amber-800 flex items-center">
+                                <i class="fa-solid fa-quote-left mr-1 text-amber-500"></i> Senior Yearbook Quote
+                            </p>
+                            <p id="modal-quote" class="text-slate-800 italic font-serif mt-1 text-xs leading-relaxed"></p>
+                        </div>
+
+                        <div class="bg-emerald-50/90 border-l-3 border-emerald-500 p-2.5 rounded-r-lg shadow-sm">
+                            <p class="text-[9px] uppercase font-bold text-emerald-800 flex items-center">
+                                <i class="fa-solid fa-heart mr-1 text-emerald-600"></i> Hobbies & Interests
+                            </p>
+                            <p id="modal-hobbies" class="text-slate-800 font-medium mt-1 text-xs leading-relaxed"></p>
+                        </div>
+                    </div>
+
+                    <!-- Autographs -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2">
+                        <h4 class="font-bold text-slate-800 text-xs"><i class="fa-solid fa-signature text-amber-600 mr-1"></i> Autograph Book</h4>
+                        <div id="autographs-display" class="grid grid-cols-2 gap-2">
+                            <p class="col-span-full text-[10px] text-slate-400 italic text-center">No digital autographs signed yet.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================= STUDENT LOGIN PORTAL ================= -->
+        <section id="view-student-login" style="display: none;" class="max-w-md mx-auto py-6">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                <div class="bg-brand-900 text-white p-5 text-center border-b-4 border-amber-500">
+                    <div class="w-12 h-12 bg-amber-500 text-slate-900 rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-2 shadow">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <h2 class="text-lg font-serif font-bold">Student Portal Access</h2>
+                    <p class="text-xs text-brand-100 mt-0.5">Log in to update your yearbook details</p>
+                </div>
+                <div class="p-5 space-y-3.5 text-xs">
+                    <div id="student-login-error" style="display: none;" class="bg-rose-50 border border-rose-200 text-rose-700 p-2.5 rounded-lg font-bold text-center"></div>
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase mb-1">Full Name or Candidate S/N *</label>
+                        <input type="text" id="student-login-name-input" placeholder="e.g. Abass Khalid or 14" class="w-full border border-slate-300 rounded-xl p-3 font-medium text-sm focus:ring-2 focus:ring-brand-500">
+                    </div>
+                    <button onclick="loginStudent()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl shadow-md transition text-xs">
+                        Access Profile <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= STUDENT EDITOR ================= -->
+        <section id="view-student-editor" style="display: none;" class="max-w-xl mx-auto py-4">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                <div class="bg-brand-800 text-white p-4 sm:p-5 flex justify-between items-center border-b-4 border-amber-500">
+                    <div>
+                        <span class="text-[9px] bg-amber-500 text-brand-900 font-black px-2 py-0.5 rounded shadow-sm">VERIFIED CANDIDATE</span>
+                        <h2 id="edit-student-name" class="text-lg font-serif font-bold mt-1"></h2>
+                        <p id="edit-student-code" class="text-xs text-brand-200 font-medium"></p>
+                    </div>
+                    <button onclick="logoutStudent()" class="text-xs bg-brand-900 text-white px-3 py-1.5 rounded-lg font-bold">
+                        Logout
+                    </button>
+                </div>
+                <div class="p-4 sm:p-5 space-y-4 text-xs">
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase mb-1">Passport Photo</label>
+                        <div class="flex items-center space-x-3 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                            <img id="edit-photo-preview" src="" alt="Preview" class="w-16 h-16 rounded-xl object-cover bg-white border border-slate-300">
+                            <div class="flex-grow space-y-1">
+                                <input type="file" id="edit-photo-input" accept="image/*" onchange="previewStudentEditorPhoto(this)" class="block w-full text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-brand-100 file:text-brand-800 file:font-bold">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase mb-1">Graduation Motto</label>
+                        <textarea id="edit-quote-input" rows="2" placeholder="Write something inspiring..." class="w-full border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-brand-500"></textarea>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase mb-1">Hobbies</label>
+                        <input type="text" id="edit-hobbies-input" placeholder="e.g. Football, Reading..." class="w-full border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-brand-500">
+                    </div>
+                    <button onclick="saveStudentProfile()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md transition">
+                        <i class="fa-solid fa-floppy-disk mr-1"></i> Save Profile Details
+                    </button>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= PHOTOGRAPHER ADMIN LOGIN ================= -->
+        <section id="view-admin-login" style="display: none;" class="max-w-md mx-auto py-6">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                <div class="bg-brand-900 text-white p-5 text-center border-b-4 border-emerald-500">
+                    <i class="fa-solid fa-camera-retro text-3xl mb-2 text-emerald-400"></i>
+                    <h2 class="text-lg font-serif font-bold">Photographer Studio</h2>
+                    <p class="text-xs text-brand-100 mt-0.5">Authorized Personnel Only</p>
+                </div>
+                <div class="p-5 space-y-4 text-xs">
+                    <div id="admin-login-error" style="display: none;" class="bg-rose-50 border border-rose-200 text-rose-700 p-2.5 rounded-lg font-bold text-center"></div>
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase mb-1">Studio Passcode</label>
+                        <input type="password" id="admin-passcode-input" placeholder="Enter passcode" class="w-full border border-slate-300 rounded-xl p-3 font-bold text-center tracking-widest focus:ring-2 focus:ring-brand-500 text-sm">
+                        <p class="text-[10px] text-slate-500 mt-1.5 text-center">Passcode is: <code class="bg-slate-100 px-1 py-0.5 rounded text-emerald-700 font-bold">admin2026</code></p>
+                    </div>
+                    <button onclick="loginAdmin()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md transition text-xs">
+                        Enter Studio <i class="fa-solid fa-arrow-right-to-bracket ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= RAPID SEARCH & SNAP STUDIO (ADMIN) ================= -->
+        <section id="view-admin-dashboard" style="display: none;" class="space-y-4">
+            
+            <!-- Dashboard Header & Merging System -->
+            <div class="bg-brand-900 text-white rounded-2xl p-4 shadow-xl border border-brand-800 space-y-3">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span class="bg-amber-500 text-brand-900 text-[9px] font-black px-2 py-0.5 rounded shadow-sm tracking-wider">PHOTOGRAPHER STUDIO</span>
+                        <h2 class="text-lg sm:text-xl font-serif font-bold mt-1">Search & Snap Studio</h2>
+                    </div>
+                    <button onclick="logoutAdmin()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow">
+                        Exit Studio
+                    </button>
+                </div>
+                
+                <!-- Export/Import Buttons -->
+                <div class="grid grid-cols-2 gap-2 pt-2 border-t border-brand-800">
+                    <button onclick="exportYearbookDatabaseJSON()" class="bg-brand-800 hover:bg-brand-700 border border-brand-600 text-white font-bold py-2 px-2 rounded-lg text-[11px] flex items-center justify-center space-x-1.5 transition">
+                        <i class="fa-solid fa-file-export text-amber-400"></i>
+                        <span>Export Backup</span>
+                    </button>
+                    
+                    <div class="relat                        sans: ['Plus Jakarta Sans', 'sans-serif'],
                         serif: ['Playfair Display', 'serif']
                     }
                 }
