@@ -3,56 +3,267 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Candidate ID Photo Capture</title>
+  <title>Candidate Photo Capture</title>
   <style>
-    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
-    body { background-color: #f1f5f9; padding: 24px; margin: 0; display: flex; justify-content: center; }
-    .card { max-width: 580px; width: 100%; background: #ffffff; padding: 28px; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
-    h2 { margin-top: 0; color: #0f172a; text-align: center; }
-    .form-group { margin-bottom: 16px; }
-    label { font-weight: 600; display: block; margin-bottom: 6px; color: #334155; font-size: 14px; }
-    input, select, button { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; }
-    input:focus, select:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px #bfdbfe; }
-    .camera-container { position: relative; width: 100%; background: #0f172a; border-radius: 8px; overflow: hidden; margin: 20px 0; aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center; }
-    video { width: 100%; height: 100%; object-fit: cover; }
-    .btn-capture { background-color: #2563eb; color: #ffffff; font-weight: bold; border: none; cursor: pointer; transition: background 0.2s; font-size: 16px; }
-    .btn-capture:hover { background-color: #1d4ed8; }
-    .btn-capture:disabled { background-color: #94a3b8; cursor: not-allowed; }
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --accent-bg: #f1f5f9;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 920px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .app-header {
+      background: #1e293b;
+      color: #ffffff;
+      padding: 20px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .app-header h1 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .badge {
+      background: #334155;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      color: #cbd5e1;
+      font-weight: 500;
+    }
+
+    .app-body {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 28px;
+      padding: 28px;
+    }
+
+    @media (max-width: 768px) {
+      .app-body { grid-template-columns: 1fr; }
+    }
+
+    .control-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: -10px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      background-color: #fff;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    /* Selected Candidate Card */
+    .candidate-card {
+      background-color: var(--accent-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: auto;
+    }
+
+    .card-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .candidate-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-top: 4px;
+    }
+
+    .candidate-exam {
+      font-size: 13px;
+      color: var(--primary);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    /* Camera View Area */
+    .camera-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .viewport {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background-color: #020617;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Face Framing Overlay */
+    .face-guide {
+      position: absolute;
+      width: 52%;
+      height: 68%;
+      border: 2px dashed rgba(255, 255, 255, 0.6);
+      border-radius: 50%;
+      pointer-events: none;
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.25);
+    }
+
+    .btn-capture {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    .btn-capture:hover:not(:disabled) {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-capture:active:not(:disabled) {
+      transform: scale(0.99);
+    }
+
+    .btn-capture:disabled {
+      background-color: #cbd5e1;
+      color: #94a3b8;
+      cursor: not-allowed;
+    }
+
     canvas { display: none; }
   </style>
 </head>
 <body>
 
-<div class="card">
-  <h2>Candidate ID Camera Capture</h2>
-  
-  <!-- Search Field -->
-  <div class="form-group">
-    <label for="search">1. Search Candidate Name or Exam No:</label>
-    <input type="text" id="search" placeholder="Type name or exam number..." oninput="filterCandidates()" />
-  </div>
+<div class="app-container">
+  <header class="app-header">
+    <h1>Candidate ID Photo Studio</h1>
+    <span class="badge">Live Camera ready</span>
+  </header>
 
-  <!-- Selection Dropdown -->
-  <div class="form-group">
-    <label for="candidateSelect">2. Select Candidate:</label>
-    <select id="candidateSelect" onchange="updateSelectedCandidate()">
-      <option value="">-- Select Candidate --</option>
-    </select>
-  </div>
+  <div class="app-body">
+    <!-- Controls Column -->
+    <div class="control-panel">
+      <span class="section-title">Candidate Details</span>
+      
+      <div class="form-group">
+        <label for="search">1. Search Candidate</label>
+        <input type="text" id="search" placeholder="Search by name or exam no..." oninput="filterCandidates()" />
+      </div>
 
-  <!-- Live Camera View -->
-  <div class="camera-container">
-    <video id="video" autoplay playsinline></video>
-  </div>
+      <div class="form-group">
+        <label for="candidateSelect">2. Select Candidate</label>
+        <select id="candidateSelect" onchange="updateSelectedCandidate()">
+          <option value="">-- Choose Candidate --</option>
+        </select>
+      </div>
 
-  <!-- Capture & Save Button -->
-  <button class="btn-capture" id="captureBtn" onclick="takeAndSavePhoto()" disabled>Snap & Save Photo</button>
+      <!-- Active Preview Card -->
+      <div class="candidate-card">
+        <div class="card-label">Active Selection</div>
+        <div class="candidate-name" id="cardName">No Candidate Selected</div>
+        <div class="candidate-exam" id="cardExam">----</div>
+      </div>
+    </div>
+
+    <!-- Camera Column -->
+    <div class="camera-panel">
+      <span class="section-title">Framing & Capture</span>
+      
+      <div class="viewport">
+        <video id="video" autoplay playsinline></video>
+        <div class="face-guide"></div>
+      </div>
+
+      <button class="btn-capture" id="captureBtn" onclick="takeAndSavePhoto()" disabled>
+        📷 Take Photo & Auto-Save
+      </button>
+    </div>
+  </div>
 
   <canvas id="canvas"></canvas>
 </div>
 
 <script>
-  // Pre-populated candidate list from your WASSCE Data List
   const candidates = [
     { examNo: "4020204001", name: "Abass Khalid Ololade" },
     { examNo: "4020204002", name: "Abayomi Kehinde Glory" },
@@ -76,10 +287,11 @@
   const video = document.getElementById('video');
   const canvas = document.getElementById('canvas');
   const captureBtn = document.getElementById('captureBtn');
+  const cardName = document.getElementById('cardName');
+  const cardExam = document.getElementById('cardExam');
 
   let selectedCandidate = null;
 
-  // Initialize webcam
   async function initCamera() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ 
@@ -87,13 +299,12 @@
       });
       video.srcObject = stream;
     } catch (err) {
-      alert("Camera access error: Please grant camera permissions in your browser.");
+      alert("Unable to access camera. Please allow camera permissions in your browser settings.");
     }
   }
 
-  // Populate candidate options
   function populateDropdown(list) {
-    candidateSelect.innerHTML = '<option value="">-- Select Candidate --</option>';
+    candidateSelect.innerHTML = '<option value="">-- Choose Candidate --</option>';
     list.forEach(c => {
       const opt = document.createElement('option');
       opt.value = c.examNo;
@@ -102,7 +313,6 @@
     });
   }
 
-  // Search filter
   function filterCandidates() {
     const query = searchInput.value.toLowerCase().trim();
     const filtered = candidates.filter(c => 
@@ -114,17 +324,30 @@
       candidateSelect.value = filtered[0].examNo;
       updateSelectedCandidate();
     } else {
-      captureBtn.disabled = true;
+      clearSelection();
     }
   }
 
   function updateSelectedCandidate() {
     const val = candidateSelect.value;
     selectedCandidate = candidates.find(c => c.examNo === val) || null;
-    captureBtn.disabled = !selectedCandidate;
+    
+    if (selectedCandidate) {
+      cardName.textContent = selectedCandidate.name;
+      cardExam.textContent = `Exam No: ${selectedCandidate.examNo}`;
+      captureBtn.disabled = false;
+    } else {
+      clearSelection();
+    }
   }
 
-  // Capture photo & trigger automatic file download
+  function clearSelection() {
+    selectedCandidate = null;
+    cardName.textContent = "No Candidate Selected";
+    cardExam.textContent = "----";
+    captureBtn.disabled = true;
+  }
+
   function takeAndSavePhoto() {
     if (!selectedCandidate) return;
 
@@ -134,11 +357,9 @@
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // Format image name clean of special characters
     const cleanName = selectedCandidate.name.replace(/[^a-zA-Z0-9]/g, "_");
     const fileName = `${selectedCandidate.examNo}_${cleanName}.jpg`;
 
-    // Convert frame to JPG and download
     const imageURL = canvas.toDataURL('image/jpeg', 0.95);
     const link = document.createElement('a');
     link.href = imageURL;
@@ -148,71 +369,11 @@
     document.body.removeChild(link);
   }
 
-  // Startup
   populateDropdown(candidates);
   initCamera();
 </script>
 </body>
-</html>    </script>
-    <style>
-        html, body {
-            overflow-x: hidden !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0;
-            padding: 0;
-        }
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    </style>
-</head>
-<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-emerald-200">
-
-    <!-- Header Navigation -->
-    <header class="bg-brand-900 text-white sticky top-0 z-40 shadow-md border-b border-brand-800 w-full">
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-2 cursor-pointer" onclick="navigateTo('gallery')">
-                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-amber-500 flex items-center justify-center font-bold text-brand-900 text-sm sm:text-base shadow-inner">
-                    GSSK
-                </div>
-                <div>
-                    <h1 class="font-serif font-bold text-sm sm:text-lg leading-tight text-amber-100">GSS KUBWA</h1>
-                    <p class="text-[9px] sm:text-[10px] text-brand-100 tracking-wider font-bold">CLASS OF 2026</p>
-                </div>
-            </div>
-
-            <!-- Nav Controls -->
-            <nav class="flex items-center space-x-1 sm:space-x-2">
-                <button onclick="navigateTo('gallery')" id="nav-gallery" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition bg-brand-800 text-white border border-brand-700">
-                    <i class="fa-solid fa-graduation-cap sm:mr-1 text-amber-300"></i><span class="hidden sm:inline">Students</span>
-                </button>
-                <button onclick="navigateTo('snap-studio')" id="nav-snap" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition bg-amber-500 text-brand-900 hover:bg-amber-400 shadow-sm">
-                    <i class="fa-solid fa-camera sm:mr-1"></i><span class="hidden sm:inline">Snap & Save</span>
-                </button>
-                <button onclick="navigateTo('student-login')" id="nav-student" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition text-brand-100 hover:bg-brand-800">
-                    <i class="fa-solid fa-user-pen sm:mr-1 text-emerald-300"></i><span id="nav-student-label" class="hidden sm:inline">Portal</span>
-                </button>
-                <button onclick="navigateTo('admin-login')" id="nav-admin" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition bg-slate-800 text-white hover:bg-slate-700 shadow-sm">
-                    <i class="fa-solid fa-cloud-arrow-up sm:mr-1"></i><span class="hidden sm:inline">Bulk Studio</span>
-                </button>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Global Banner -->
-    <div id="status-banner" class="bg-brand-800 border-b border-brand-700 text-emerald-100 text-[10px] sm:text-xs py-1.5 px-3 text-center font-bold shadow-inner w-full">
-        <i class="fa-solid fa-bolt text-amber-400 mr-1"></i> Live Snap Camera & Name Matcher Ready!
-    </div>
-
-    <!-- Main Content Container -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 py-4">
-
-        <!-- ================= GALLERY VIEW ================= -->
-        <section id="view-gallery" class="space-y-4">
-            <div class="bg-gradient-to-r from-brand-900 via-brand-800 to-slate-900 rounded-2xl p-4 sm:p-6 text-white shadow-xl relative overflow-hidden">
-                <div class="relative z-10 max-w-2xl space-y-1.5">
-                    <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Official 2026 Graduating Class</span>
+  </html>l 2026 Graduating Class</span>
                     <h2 class="text-xl sm:text-3xl font-serif font-bold text-white">Government Secondary School, Kubwa</h2>
                     <p class="text-brand-100 text-xs sm:text-sm leading-relaxed">Explore all 714 candidates. Search by student name or candidate number. Click on any student to view their profile or sign digital autographs.</p>
                 </div>
