@@ -1,40 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GSS Kubwa Class of 2026 - Digital Yearbook</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickSnap - Auto-Named Photo Capture</title>
+  <style>
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: #121212; color: #fff; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+    .card { background: #1e1e1e; padding: 20px; border-radius: 12px; width: 100%; max-width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+    h2 { margin-top: 0; text-align: center; color: #4da6ff; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+    input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #2a2a2a; color: #fff; font-size: 1rem; }
+    input:focus { outline: 2px solid #4da6ff; }
+    .camera-box { position: relative; width: 100%; aspect-ratio: 4/3; background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 15px; }
+    video, canvas { width: 100%; height: 100%; object-fit: cover; }
+    .btn-group { display: flex; gap: 10px; }
+    button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; }
+    .btn-capture { background: #00c853; color: white; }
+    .btn-capture:disabled { background: #444; color: #888; cursor: not-allowed; }
+    .btn-reset { background: #333; color: white; }
+    .status { text-align: center; margin-top: 10px; font-size: 0.85rem; color: #aaa; }
+  </style>
+</head>
+<body>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            500: '#16a34a',
-                            600: '#15803d',
-                            700: '#166534',
-                            800: '#14532d',
-                            900: '#062c12',
-                            gold: '#d97706'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif']
-                    }
-                }
-            }
-        }
-    </script>
+<div class="card">
+  <h2>QuickSnap ID Capture</h2>
+
+  <div class="form-group">
+    <label for="personName">Person's Name:</label>
+    <input type="text" id="personName" list="rosterList" placeholder="Search or type name..." autocomplete="off">
+    <!-- Optional search roster auto-complete -->
+    <datalist id="rosterList">
+      <option value="Alex Johnson"></option>
+      <option value="Blessing Okon"></option>
+      <option value="David Smith"></option>
+      <option value="Sarah Connor"></option>
+    </datalist>
+  </div>
+
+  <div class="camera-box">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas" style="display:none;"></canvas>
+  </div>
+
+  <div class="btn-group">
+    <button id="captureBtn" class="btn-capture" disabled>Snap & Save</button>
+    <button id="resetBtn" class="btn-reset">Reset / Next</button>
+  </div>
+
+  <p class="status" id="statusText">Enter a name to enable capture.</p>
+</div>
+
+<script>
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const nameInput = document.getElementById('personName');
+  const captureBtn = document.getElementById('captureBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const statusText = document.getElementById('statusText');
+
+  // 1. Start Camera Feed
+  async function initCamera() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: { ideal: 1280 }, height: { ideal: 960 }, facingMode: "user" }
+      });
+      video.srcObject = stream;
+    } catch (err) {
+      alert("Unable to access camera: " + err.message);
+      statusText.innerText = "Camera permission error.";
+    }
+  }
+
+  // 2. Validate input name before enabling snap
+  nameInput.addEventListener('input', () => {
+    if (nameInput.value.trim().length > 0) {
+      captureBtn.disabled = false;
+      statusText.innerText = "Ready to capture!";
+    } else {
+      captureBtn.disabled = true;
+      statusText.innerText = "Enter a name to enable capture.";
+    }
+  });
+
+  // 3. Capture Photo & Auto-Download
+  captureBtn.addEventListener('click', () => {
+    const rawName = nameInput.value.trim();
+    if (!rawName) return;
+
+    // Clean name for standard file formatting (e.g. "John Doe" -> "John_Doe")
+    const cleanFileName = rawName.replace(/[^a-zA-Z0-9\s-_]/g, '').trim().replace(/\s+/g, '_');
+
+    // Draw video frame to canvas
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Save as JPG
+    const imageData = canvas.toDataURL('image/jpeg', 0.92);
+    
+    // Trigger browser download
+    const link = document.createElement('a');
+    link.href = imageData;
+    link.download = `${cleanFileName}.jpg`;
+    link.click();
+
+    statusText.innerText = `Saved as "${cleanFileName}.jpg"!`;
+    
+    // Highlight input for the next person
+    nameInput.select();
+  });
+
+  // 4. Reset for Next Person
+  resetBtn.addEventListener('click', () => {
+    nameInput.value = '';
+    captureBtn.disabled = true;
+    nameInput.focus();
+    statusText.innerText = "Ready for next person.";
+  });
+
+  initCamera();
+</script>
+
+</body>
+</html>    </script>
     <style>
         html, body {
             overflow-x: hidden !important;
