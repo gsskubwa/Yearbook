@@ -1,40 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GSS Kubwa Class of 2026 - Digital Yearbook</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Candidate ID Photo Capture</title>
+  <style>
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+    body { background-color: #f1f5f9; padding: 24px; margin: 0; display: flex; justify-content: center; }
+    .card { max-width: 580px; width: 100%; background: #ffffff; padding: 28px; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+    h2 { margin-top: 0; color: #0f172a; text-align: center; }
+    .form-group { margin-bottom: 16px; }
+    label { font-weight: 600; display: block; margin-bottom: 6px; color: #334155; font-size: 14px; }
+    input, select, button { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; }
+    input:focus, select:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px #bfdbfe; }
+    .camera-container { position: relative; width: 100%; background: #0f172a; border-radius: 8px; overflow: hidden; margin: 20px 0; aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center; }
+    video { width: 100%; height: 100%; object-fit: cover; }
+    .btn-capture { background-color: #2563eb; color: #ffffff; font-weight: bold; border: none; cursor: pointer; transition: background 0.2s; font-size: 16px; }
+    .btn-capture:hover { background-color: #1d4ed8; }
+    .btn-capture:disabled { background-color: #94a3b8; cursor: not-allowed; }
+    canvas { display: none; }
+  </style>
+</head>
+<body>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            500: '#16a34a',
-                            600: '#15803d',
-                            700: '#166534',
-                            800: '#14532d',
-                            900: '#062c12',
-                            gold: '#d97706'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif']
-                    }
-                }
-            }
-        }
-    </script>
+<div class="card">
+  <h2>Candidate ID Camera Capture</h2>
+  
+  <!-- Search Field -->
+  <div class="form-group">
+    <label for="search">1. Search Candidate Name or Exam No:</label>
+    <input type="text" id="search" placeholder="Type name or exam number..." oninput="filterCandidates()" />
+  </div>
+
+  <!-- Selection Dropdown -->
+  <div class="form-group">
+    <label for="candidateSelect">2. Select Candidate:</label>
+    <select id="candidateSelect" onchange="updateSelectedCandidate()">
+      <option value="">-- Select Candidate --</option>
+    </select>
+  </div>
+
+  <!-- Live Camera View -->
+  <div class="camera-container">
+    <video id="video" autoplay playsinline></video>
+  </div>
+
+  <!-- Capture & Save Button -->
+  <button class="btn-capture" id="captureBtn" onclick="takeAndSavePhoto()" disabled>Snap & Save Photo</button>
+
+  <canvas id="canvas"></canvas>
+</div>
+
+<script>
+  // Pre-populated candidate list from your WASSCE Data List
+  const candidates = [
+    { examNo: "4020204001", name: "Abass Khalid Ololade" },
+    { examNo: "4020204002", name: "Abayomi Kehinde Glory" },
+    { examNo: "4020204003", name: "Abayomi Taye Precious" },
+    { examNo: "4020204004", name: "Abdulazeez Abdulateef" },
+    { examNo: "4020204005", name: "Abdulazeez Jemila Omayoza" },
+    { examNo: "4020204006", name: "Abdulazeez Umeima Oyiza" },
+    { examNo: "4020204007", name: "Abdulganiyu Aeesha Oyereyi" },
+    { examNo: "4020204008", name: "Abdulhakeem Abdulbaqee Olayinka" },
+    { examNo: "4020204009", name: "Abdulhakeem Mustapha Adetunji" },
+    { examNo: "4020204010", name: "Abduljaleel Mujeebah Olabisi" },
+    { examNo: "4020204011", name: "Abdulkarim Shafa'atu" },
+    { examNo: "4020204012", name: "Abdullahi Aisha" },
+    { examNo: "4020204013", name: "Abdullahi Ibrahim" },
+    { examNo: "4020204014", name: "Abdullahi Labib" },
+    { examNo: "4020204015", name: "Abdullahi Mariyam" }
+  ];
+
+  const searchInput = document.getElementById('search');
+  const candidateSelect = document.getElementById('candidateSelect');
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const captureBtn = document.getElementById('captureBtn');
+
+  let selectedCandidate = null;
+
+  // Initialize webcam
+  async function initCamera() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { width: { ideal: 1280 }, height: { ideal: 960 }, facingMode: "user" } 
+      });
+      video.srcObject = stream;
+    } catch (err) {
+      alert("Camera access error: Please grant camera permissions in your browser.");
+    }
+  }
+
+  // Populate candidate options
+  function populateDropdown(list) {
+    candidateSelect.innerHTML = '<option value="">-- Select Candidate --</option>';
+    list.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.examNo;
+      opt.textContent = `${c.examNo} - ${c.name}`;
+      candidateSelect.appendChild(opt);
+    });
+  }
+
+  // Search filter
+  function filterCandidates() {
+    const query = searchInput.value.toLowerCase().trim();
+    const filtered = candidates.filter(c => 
+      c.name.toLowerCase().includes(query) || c.examNo.includes(query)
+    );
+    populateDropdown(filtered);
+    
+    if (filtered.length === 1) {
+      candidateSelect.value = filtered[0].examNo;
+      updateSelectedCandidate();
+    } else {
+      captureBtn.disabled = true;
+    }
+  }
+
+  function updateSelectedCandidate() {
+    const val = candidateSelect.value;
+    selectedCandidate = candidates.find(c => c.examNo === val) || null;
+    captureBtn.disabled = !selectedCandidate;
+  }
+
+  // Capture photo & trigger automatic file download
+  function takeAndSavePhoto() {
+    if (!selectedCandidate) return;
+
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Format image name clean of special characters
+    const cleanName = selectedCandidate.name.replace(/[^a-zA-Z0-9]/g, "_");
+    const fileName = `${selectedCandidate.examNo}_${cleanName}.jpg`;
+
+    // Convert frame to JPG and download
+    const imageURL = canvas.toDataURL('image/jpeg', 0.95);
+    const link = document.createElement('a');
+    link.href = imageURL;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  // Startup
+  populateDropdown(candidates);
+  initCamera();
+</script>
+</body>
+</html>    </script>
     <style>
         html, body {
             overflow-x: hidden !important;
